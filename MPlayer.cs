@@ -28,7 +28,7 @@ namespace RPG
         public bool arcaneSniper = false;
         public bool savage = false;
         public bool ninja = false;
-        public bool rogue = false;//for X seconds, next enemy contacted will deal 0 damage and drop 20-60% plus a scalng flat value of coins 
+        public bool rogue = false;//for X seconds, next enemy contacted will deal 0 damage and drop 20-60% plus a scalng flat value of coins
         public bool soulbound = false;
         public bool explorer = false;
         public bool cavalry = false;
@@ -77,7 +77,7 @@ namespace RPG
         public int special4 = 0;
         public int specialTimer = 0;
         public int specialProgressionCount = 0;//max 14
-        
+
         public override TagCompound Save()
         {
             TagCompound data = new TagCompound();
@@ -92,6 +92,7 @@ namespace RPG
             data.Add("Bosses", bossByte);
             return data;
         }
+
         public override void Load(TagCompound tag)
         {
             byte[] bossByte = tag.GetByteArray("Bosses");
@@ -164,6 +165,7 @@ namespace RPG
 
             }
         }
+
         public override void LoadLegacy(BinaryReader reader)
         {
             if (reader.PeekChar() == -1)
@@ -236,6 +238,7 @@ namespace RPG
 
             }
         }
+
         public override void ResetEffects()
         {
             specialProgressionCount = 0;
@@ -298,6 +301,7 @@ namespace RPG
             }
             #endregion
         }
+
         public override void PreUpdateBuffs()
         {
             #region knight
@@ -3093,9 +3097,9 @@ namespace RPG
                 player.meleeDamage += .05f;
                 player.jumpSpeedBoost = 1f;
                 player.jumpSpeedBoost *= 1.3f;
+                player.maxFallSpeed *= 1.3f;
                 player.moveSpeed *= 1.1f;
                 player.maxRunSpeed *= 1.1f;
-                player.maxFallSpeed *= 1.3f;
                 player.minionDamage -= .1f;
                 player.magicDamage -= .1f;
                 player.thrownDamage -= .1f;
@@ -3870,7 +3874,7 @@ namespace RPG
                 float angle = 360f / count;
                 for(int i=0; i<count; i++)
                 {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0, 0, mod.ProjectileType("CelestialStar"), 1, 2, player.whoAmI, i * angle);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("CelestialStar"), 1, 2, player.whoAmI, i * angle);
                 }
             }
             else if (celestial)
@@ -3882,6 +3886,7 @@ namespace RPG
                 }
             }
         }
+
         public override void PostUpdateEquips()
         {
             if (sage && specialTimer > 0)
@@ -3961,7 +3966,7 @@ namespace RPG
                         player.velocity.Y = -vel;
                         player.AddBuff(mod.BuffType("ActiveCooldown"), 180);
                     }
-                }               
+                }
             }
             else if(dragoon && specialTimer == 0)
             {
@@ -4077,9 +4082,9 @@ namespace RPG
                 }
                 if (specialTimer % 15 == 0)
                 {
-                    float scalar = .5f + (float)Math.Pow(specialProgressionCount, 1.5) / 7;
-                    float damage = 4 * scalar * player.magicDamage;
-                    DamageAreaNoDefense(new Vector2(player.Center.X, player.Center.Y - 58), 100, (int)damage, 1);
+                    float scalar = .5f + (float)Math.Pow(specialProgressionCount, 1.5) / 7f;
+                    int damage = (int)(4f * scalar * player.magicDamage);
+                    DamageAreaNoDefense(new Vector2(player.Center.X, player.Center.Y - 58), 100, damage, 1);
                 }
             }
             else if (hallowMage && specialTimer > 0 && specialTimer%8==0)
@@ -4235,6 +4240,7 @@ namespace RPG
                 }
             }
         }
+
         public override void PostUpdateRunSpeeds()
         {
             #region harpy air movement
@@ -4439,6 +4445,7 @@ namespace RPG
             }
             #endregion
         }
+
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             if (fortress && player.FindBuffIndex(mod.BuffType("ActiveCooldown"))>=0 && player.FindBuffIndex(BuffID.Stoned)>=0)
@@ -4463,6 +4470,7 @@ namespace RPG
             }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
         }
+
         public override void Hurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
             if (sage && specialTimer > 1)//interrupt charge
@@ -4473,6 +4481,7 @@ namespace RPG
             }
             base.Hurt(pvp, quiet, damage, hitDirection, crit);
         }
+
         public override void SetupStartInventory(IList<Item> items)
         {
             if (hasClass)
@@ -4486,6 +4495,7 @@ namespace RPG
             i.SetDefaults(mod.ItemType("CharacterInfo"));
             items.Add(i);
         }
+
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             if (arcaneSniper && special2 > 0 && player.statMana > 0 && item.ranged && !item.Name.Contains("hotgun"))//ugly fix for shotgun exploit (!item.name.Contains("hotgun") && !item.name.Contains("hotbow") && !item.name.Contains("sunami") && !item.name.Contains("oomstick") && !item.name.Contains("enopopper"))
@@ -4536,6 +4546,7 @@ namespace RPG
             }
             return base.Shoot(item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
         }
+
         public override void MeleeEffects(Item item, Rectangle hitbox)
         {
             if (warmage && specialTimer>0 && Main.rand.Next(0,2)==0)
@@ -4543,6 +4554,7 @@ namespace RPG
                 int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, 15);
             }
         }
+
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             if(marksman && specialTimer>0 && proj.ranged && crit)
@@ -4579,6 +4591,7 @@ namespace RPG
                 damage += (int)(bonus * damage);
             }
         }
+
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
             if (dragoon && player.velocity.Y > 0)
@@ -4591,6 +4604,7 @@ namespace RPG
                 damage += (int)(bonus * damage);
             }
         }
+
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
         {
             if (ranger && specialTimer > 0)
@@ -4599,6 +4613,7 @@ namespace RPG
             }
             return base.CanBeHitByNPC(npc, ref cooldownSlot);
         }
+
         public override bool CanBeHitByProjectile(Projectile proj)
         {
             if (ranger && specialTimer > 0)
@@ -4607,6 +4622,7 @@ namespace RPG
             }
             return base.CanBeHitByProjectile(proj);
         }
+
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
         {
 
@@ -4637,6 +4653,7 @@ namespace RPG
                 info.mothAmpTime = 600;
             }
         }
+
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             if (berserker && specialTimer > 0)
@@ -4658,10 +4675,11 @@ namespace RPG
                 info.mothAmpTime = 600;
             }
         }
+
         public override void OnHitAnything(float x, float y, Entity victim)
         {
-
         }
+
         public override void UpdateBadLifeRegen()
         {
             if(berserker && specialTimer > 0)
@@ -4686,12 +4704,14 @@ namespace RPG
                 player.lifeRegen -= (DPS * 2);
             }
         }
+
         public override void UpdateDead()
         {
             special = 0;
             special3 = 0;
             specialTimer = 0;
         }
+
         public override void PostUpdate()
         {
             if (moth)
@@ -4712,22 +4732,24 @@ namespace RPG
                         special3 = 180 + specialProgressionCount * 10;
                     }
                 }
-            }
-            if(moth && specialTimer == 0 && special == 1 && special3 > 0 && player.controlJump && player.velocity.Y != 0)
-            {
-                specialTimer = Main.rand.Next(2, 4);
-                float scalar = 2f + (float)Math.Pow(specialProgressionCount, 1.6) / 7;
-                float dam = 3 * scalar;
-                for(int i=0; i<2+specialProgressionCount/6; i++)
+
+                if (specialTimer == 0 && special == 1 && special3 > 0 && player.controlJump && player.velocity.Y != 0)
                 {
-                    int offsetX = player.direction * Main.rand.Next(24, 36);
-                    int offsetY = Main.rand.Next(-20, 21);
-                    int p = Projectile.NewProjectile(player.Center.X - offsetX, player.Center.Y + offsetY, 0, 0, mod.ProjectileType("MothPoison"), (int)dam, 0, player.whoAmI, Main.rand.Next(6));
-                    Main.projectile[p].scale = .2f + Main.rand.NextFloat() / 2;
+                    specialTimer = Main.rand.Next(2, 4);
+                    float scalar = 2f + (float)Math.Pow(specialProgressionCount, 1.6) / 7f;
+                    int dam = (int)(3f * scalar);
+                    for (int i = 0; i < 2 + specialProgressionCount / 6; i++)
+                    {
+                        int offsetX = player.direction * Main.rand.Next(24, 36);
+                        int offsetY = Main.rand.Next(-20, 21);
+                        int p = Projectile.NewProjectile(player.Center.X - offsetX, player.Center.Y + offsetY, 0f, 0f, mod.ProjectileType("MothPoison"), dam, 0f, player.whoAmI, Main.rand.Next(6));
+                        Main.projectile[p].scale = .2f + Main.rand.NextFloat() / 2f;
+                    }
+                    special3--;
                 }
-                special3--;
             }
         }
+
         /*public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
             int type = (byte)GameShaders.Armor.GetShaderIdFromItemId(1012);
@@ -4758,10 +4780,11 @@ namespace RPG
             value.texture = Main.playerTextures[player.skinVariant, 8];
             GameShaders.Armor.Apply(type, player, new DrawData?(value));
         }*/
+
         public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-
         }
+
         public static void DamageArea(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);
@@ -4777,12 +4800,13 @@ namespace RPG
                 }
             }
         }
-        public void HealArea(Vector2 p, int width, int healAmount)//hostile npcs, no crit, no immunity
+
+        public void HealArea(Vector2 p, int width, int healAmount)//hostile npcs, no crit, no immunity // bad comment?
         {
-            Microsoft.Xna.Framework.Rectangle hurtbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);
+            Microsoft.Xna.Framework.Rectangle healbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);
             for (int i = 0; i < 256; i++)
             {
-                bool flag2 = hurtbox.Intersects(Main.player[i].getRect());
+                bool flag2 = healbox.Intersects(Main.player[i].getRect());
                 if (Main.player[i].active && !Main.player[i].dead && flag2)
                 {
                     Main.player[i].statLife += healAmount;
@@ -4795,6 +4819,7 @@ namespace RPG
                 }
             }
         }
+
         public static void DamageAreaNoDefense(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);

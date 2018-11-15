@@ -14,14 +14,17 @@ namespace RPG
             Properties = new ModProperties()
             {
                 Autoload = true,
+                AutoloadBackgrounds = true,
                 AutoloadGores = true,
                 AutoloadSounds = true
             };
         }
+
         public override void Load()
         {
             RegisterHotKey("Active Ability", "Q");
         }
+
         public override void HotKeyPressed(string name)
         {
             Player player = Main.player[Main.myPlayer];
@@ -36,11 +39,11 @@ namespace RPG
                     string type = "Shield1";
                     if (count <= 5)
                     {
-                        damage += (int)(2 * count);
+                        damage += 2 * count;
                     }
                     else if (count <= 9)
                     {
-                        damage += (int)(3 * count);
+                        damage += 3 * count;
                         type = "Shield2";
                     }
                     else if (count <= 12)
@@ -573,6 +576,7 @@ namespace RPG
                 }
             }
         }
+
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             string type = reader.ReadString();
@@ -714,6 +718,7 @@ namespace RPG
                 }
             }
         }
+
         public static void DamageArea(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);
