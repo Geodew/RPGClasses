@@ -92,6 +92,12 @@
     <Compile Include="Items\WerewolfContract.cs" />
     <Compile Include="MPlayer.cs" />
     <Compile Include="NPCs\GNPC.cs" />
+    <Compile Include="PacketMessages\HealPlayerNetMsg.cs" />
+    <Compile Include="PacketMessages\LevelUpPlayerNetMsg.cs" />
+    <Compile Include="PacketMessages\PacketMessageTypeEnum.cs" />
+    <Compile Include="PacketMessages\SandstormVisualsNetMsg.cs" />
+    <Compile Include="PacketMessages\SpawnDustNetMsg.cs" />
+    <Compile Include="PacketMessages\VelocityChangeNpcNetMsg.cs" />
     <Compile Include="Projectiles\AnglerChum.cs" />
     <Compile Include="Projectiles\AnglerShark.cs" />
     <Compile Include="Projectiles\CelestialStar.cs" />

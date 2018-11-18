@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.IO;
+using RPG.PacketMessages;
 
 namespace RPG
 {
@@ -101,14 +102,15 @@ namespace RPG
                             {
                                 int dust = Dust.NewDust(Main.projectile[i].position, Main.projectile[i].width, Main.projectile[i].height, 15);
                                 Main.dust[dust].velocity.Normalize();
-                                Main.dust[dust].velocity *= 3;
-                                var netMessage = GetPacket();
-                                netMessage.Write("Dust");
-                                netMessage.Write(player.whoAmI);
-                                netMessage.Write(15);
-                                netMessage.Write(true);
-                                netMessage.Write(3.0);
-                                netMessage.Send();
+                                Main.dust[dust].velocity *= 3.0f;
+
+                                SpawnDustNetMsg.SerializeAndSendPlayer(
+                                    this,
+                                    player.whoAmI,
+                                    15,
+                                    true,
+                                    true,
+                                    3.0f);
                             }
                             Main.projectile[i].Kill();
                             minionsKilled++;
@@ -246,14 +248,14 @@ namespace RPG
                     mplayer.specialTimer = 1800;
                     if (player.ZoneDesert || player.ZoneUndergroundDesert)
                     {
-                        mplayer.special2 = 1;//get bigger bonuses
+                        mplayer.special2 = 1;  // Get bigger bonuses
                     }
                 }
                 else if (mplayer.arcaneSniper)
                 {
                     player.AddBuff(BuffType("ActiveCooldown"), 1800);
                     mplayer.specialTimer = 600;
-                    mplayer.special2 = 1 + mplayer.specialProgressionCount / 4;//number of empowered shots
+                    mplayer.special2 = 1 + mplayer.specialProgressionCount / 4;  // Number of empowered shots
                 }
                 else if (mplayer.hallowMage)
                 {
@@ -284,15 +286,16 @@ namespace RPG
                     {
                         int dust = Dust.NewDust(player.position, player.width, player.height, 90);
                         Main.dust[dust].velocity.Normalize();
-                        Main.dust[dust].velocity *= 16;
+                        Main.dust[dust].velocity *= 16.0f;
                         Main.dust[dust].noGravity = true;
-                        var netMessage = GetPacket();
-                        netMessage.Write("DustNormalize");
-                        netMessage.Write(player.whoAmI);
-                        netMessage.Write(90);
-                        netMessage.Write(true);
-                        netMessage.Write(16.0);
-                        netMessage.Send();
+
+                        SpawnDustNetMsg.SerializeAndSendPlayer(
+                            this,
+                            player.whoAmI,
+                            90,
+                            true,
+                            true,
+                            16.0f);
                     }
                 }
                 else if (mplayer.wanderer)
@@ -375,18 +378,23 @@ namespace RPG
                         DamageArea(proj.Center, 256, (int)damage, 15);
                         for(int i=1; i<5; i++)
                         {
-                            for(int j=0; j<15 * i; j++)
+                            float velocityScalar = 2.5f * i;
+
+                            for(int j = 0; j < (15 * i); j++)
                             {
+                                //zzz This loop doesn't depend on j. What's the point of generating multiple Dust objects on top of each other?
+                                //    Was velocityScalar supposed to scale with j instead of i, perhaps?
                                 int d = Dust.NewDust(proj.Center, proj.width, proj.height, 15);
                                 Main.dust[d].velocity.Normalize();
-                                Main.dust[d].velocity *= 2.5f * i;
-                                var netMessage = GetPacket();
-                                netMessage.Write("DustNormalizeProj");
-                                netMessage.Write(proj.whoAmI);
-                                netMessage.Write(15);
-                                netMessage.Write(true);
-                                netMessage.Write(2.5*i);
-                                netMessage.Send();
+                                Main.dust[d].velocity *= velocityScalar;
+
+                                SpawnDustNetMsg.SerializeAndSendProjectile(
+                                    this,
+                                    proj.whoAmI,
+                                    15,
+                                    true,
+                                    true,
+                                    velocityScalar);
                             }
                         }
                         if(player.statLife < mplayer.special)
@@ -450,7 +458,8 @@ namespace RPG
                     {
                         vector15.Y = Main.screenPosition.Y + (float)Main.screenHeight - (float)Main.mouseY;
                     }
-                    //reduce to max teleport distance
+
+                    // Reduce to max teleport distance
                     float dist = Vector2.Distance(vector15, player.Center);
                     float maxDist = 200 + 50 * mplayer.specialProgressionCount;
                     if (dist > maxDist)
@@ -460,8 +469,8 @@ namespace RPG
                         toMouse *= (dist - maxDist);
                         vector15 -= toMouse;
                     }
-                    vector15.X += (float)(player.width / 2);
-                    vector15.Y += (float)(player.height / 2);
+                    vector15.X += player.width / 2f;
+                    vector15.Y += player.height / 2f;
                     if (vector15.X > 50f && vector15.X < (float)(Main.maxTilesX * 16 - 50) && vector15.Y > 50f && vector15.Y < (float)(Main.maxTilesY * 16 - 50))
                     {
                         int num260 = (int)(vector15.X / 16f);
@@ -492,24 +501,26 @@ namespace RPG
                             player.KillMe(new Terraria.DataStructures.PlayerDeathReason(), 1.0, 0);
                         }
                     }
-                    //deal area damage
+
+                    // Deal area damage
                     float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 6;
                     float damage = 14 * scalar * Math.Max(player.magicDamage, player.meleeDamage) * Math.Max(1+player.magicCrit/100f, 1+player.meleeCrit/100f) * (1 + mplayer.special2 / 3f);
                     DamageArea(vector15, 144, (int)damage, 3);
-                    //visuals
-                    for(int i = 0;i<30;i++)
+
+                    // Visuals
+                    for(int i = 0; i < 30; i++)
                     {
                         int d = Dust.NewDust(vector15, 1, 1, 27);
-                        Main.dust[d].velocity *= 4;
+                        Main.dust[d].velocity *= 4.0f;
+
+                        SpawnDustNetMsg.SerializeAndSendPosition(
+                            this,
+                            vector15,
+                            27,
+                            true,
+                            false,
+                            4.0f);
                     }
-                    var netMessage = GetPacket();
-                    netMessage.Write("DustPosMult");
-                    netMessage.Write((int)vector15.X);
-                    netMessage.Write((int)vector15.Y);
-                    netMessage.Write(27);
-                    netMessage.Write(true);
-                    netMessage.Write(4);
-                    netMessage.Send();
                 }
                 else if (mplayer.moth)
                 {
@@ -579,143 +590,46 @@ namespace RPG
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-            string type = reader.ReadString();
-            if (type.Contains("Dust") && Main.netMode != 2)
+            PacketMessageTypeEnum messageType = (PacketMessageTypeEnum)reader.ReadInt32();
+            if ((messageType == PacketMessageTypeEnum.SPAWN_DUST) && (Main.netMode != 2))
             {
-                int dustID=0;
-                int d = 0;
-                if (type.Contains("Proj"))
-                {
-                    Projectile proj = Main.projectile[reader.ReadInt32()];
-                    dustID = reader.ReadInt32();
-                    d = Dust.NewDust(proj.position, proj.width, proj.height, dustID);
-                }
-                else if (type.Contains("Pos"))
-                {
-                    Vector2 pos = new Vector2(reader.ReadInt32(), reader.ReadInt32());
-                    dustID = reader.ReadInt32();
-                    d = Dust.NewDust(pos, 1, 1, dustID);
-                }
-                else
-                {
-                    Player player = Main.player[reader.ReadInt32()];
-                    dustID = reader.ReadInt32();
-                    d = Dust.NewDust(player.position, player.width, player.height, dustID);
-                }
-                bool flag = reader.ReadBoolean();
-                if (flag)
-                {
-                    if(type.Contains("Normalize"))
-                    {
-                        Main.dust[d].velocity.Normalize();
-                    }
-                    Main.dust[d].velocity *= (float)reader.ReadDouble();
-                    if(dustID == 91 || dustID == 90 || dustID == 27)
-                    {
-                        Main.dust[d].noGravity = true;
-                    }
-                }
+                SpawnDustNetMsg spawnDustNetMsg = new SpawnDustNetMsg();
+                spawnDustNetMsg.HandlePacket(
+                    reader,
+                    whoAmI,
+                    this);
             }
-            else if (type.Contains("Vel"))
+            else if (messageType == PacketMessageTypeEnum.VELOCITY_CHANGE_NPC)
             {
-                if (type.Contains("NPC"))
-                {
-                    Vector2 vel = new Vector2((float)reader.ReadDouble(), (float)reader.ReadDouble());
-                    NPC npc = Main.npc[reader.ReadInt32()];
-                    npc.velocity = vel;
-                }
+                VelocityChangeNpcNetMsg velocityChangeNpcNetMsg = new VelocityChangeNpcNetMsg();
+                velocityChangeNpcNetMsg.HandlePacket(
+                    reader,
+                    whoAmI,
+                    this);
             }
-            else if (type.Contains("Sandstorm"))
+            else if (messageType == PacketMessageTypeEnum.SANDSTORM_VISUALS)
             {
-                Player player = Main.player[reader.ReadInt32()];
-                Vector2 spawnPos = new Vector2(player.position.X - 96, player.position.Y + 32);
-                int d = Dust.NewDust(spawnPos, player.width + 192, player.height, 32);
-                spawnPos = new Vector2(spawnPos.X + 96 + (float)Math.Cos(Main.rand.Next(6) % 6) * 16, spawnPos.Y - 112);
-                Main.dust[d].velocity = spawnPos - Main.dust[d].position;
-                Main.dust[d].velocity.Normalize();
-                Main.dust[d].velocity *= 8;
-                Main.dust[d].velocity += player.velocity;
+                SandstormVisualsNetMsg sandstormVisualsNetMsg = new SandstormVisualsNetMsg();
+                sandstormVisualsNetMsg.HandlePacket(
+                    reader,
+                    whoAmI,
+                    this);
             }
-            else if (type.Contains("Heal"))
+            else if (messageType == PacketMessageTypeEnum.HEAL_PLAYER)
             {
-                Player player = Main.player[reader.ReadInt32()];
-                player.statLife += reader.ReadInt32();
+                HealPlayerNetMsg healPlayerNetMsg = new HealPlayerNetMsg();
+                healPlayerNetMsg.HandlePacket(
+                    reader,
+                    whoAmI,
+                    this);
             }
-            else if (type.Contains("Level"))
+            else if (messageType == PacketMessageTypeEnum.LEVEL_UP_PLAYER)
             {
-                Player player = Main.player[reader.ReadInt32()];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(this, "MPlayer"));
-                int msgType = reader.ReadInt32();
-                if (msgType == 1 && !mplayer.killedEye)
-                {
-                    mplayer.killedEye = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 2 && !mplayer.killedWormOrBrain)
-                {
-                    mplayer.killedWormOrBrain = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 3 && !mplayer.killedSkelly)
-                {
-                    mplayer.killedSkelly = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 4 && !mplayer.killedBee)
-                {
-                    mplayer.killedBee = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 5 && !mplayer.killedSlime)
-                {
-                    mplayer.killedSlime = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 6 && !mplayer.killedWall)
-                {
-                    mplayer.killedWall = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 7 && !mplayer.killedDestroyer)
-                {
-                    mplayer.killedDestroyer = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 8 && !mplayer.killedTwins)
-                {
-                    mplayer.killedTwins = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 9 && !mplayer.killedPrime)
-                {
-                    mplayer.killedPrime = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 10 && !mplayer.killedPlant)
-                {
-                    mplayer.killedPlant = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 11 && !mplayer.killedGolem)
-                {
-                    mplayer.killedGolem = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 12 && !mplayer.killedFish)
-                {
-                    mplayer.killedFish = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 13 && !mplayer.killedCultist)
-                {
-                    mplayer.killedCultist = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
-                if (msgType == 14 && !mplayer.killedMoon)
-                {
-                    mplayer.killedMoon = true;
-                    CombatText.NewText(new Rectangle((int)player.position.X, (int)player.position.Y - 50, player.width, player.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                }
+                LevelUpPlayerNetMsg levelUpPlayerNetMsg = new LevelUpPlayerNetMsg();
+                levelUpPlayerNetMsg.HandlePacket(
+                    reader,
+                    whoAmI,
+                    this);
             }
         }
 

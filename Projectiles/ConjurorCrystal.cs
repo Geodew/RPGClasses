@@ -46,7 +46,7 @@ namespace RPG.Projectiles
                                 if (Main.netMode == 2) { NetMessage.SendData(28, -1, -1, null, npcD.whoAmI, 9999f, 0f, 0f); }
                             }
                         }
-                        int d = Dust.NewDust(npcD.position, (npcD.width), (npcD.height), 15, 0, 0, 0, default(Color), 3f);//try other types
+                        int d = Dust.NewDust(npcD.position, npcD.width, npcD.height, 15, 0.0f, 0.0f, 0, default(Color), 3f);  // Try other types
                         Main.dust[d].velocity = (projectile.Center - npcD.Center) / 9.8f;
                         Main.dust[d].noGravity = true;
                         projectile.localAI[0]++;

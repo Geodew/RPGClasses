@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RPG.PacketMessages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -3892,12 +3893,14 @@ namespace RPG
                 if(Main.rand.Next(0,2)==0)
                 {
                     int dust = Dust.NewDust(player.position, player.width, player.height, 15);
-                    var netMessage = mod.GetPacket();
-                    netMessage.Write("Dust");
-                    netMessage.Write(player.whoAmI);
-                    netMessage.Write(15);
-                    netMessage.Write(false);
-                    netMessage.Send();
+
+                    SpawnDustNetMsg.SerializeAndSendPlayer(
+                        mod,
+                        player.whoAmI,
+                        15,
+                        false,
+                        false,
+                        1.0f);
                 }
                 if(specialTimer > 1)
                 {
@@ -3943,12 +3946,14 @@ namespace RPG
                 if (Main.rand.Next(0, 2) == 0)
                 {
                     int dust = Dust.NewDust(player.position, player.width, player.height, 15);
-                    var netMessage = mod.GetPacket();
-                    netMessage.Write("Dust");
-                    netMessage.Write(player.whoAmI);
-                    netMessage.Write(15);
-                    netMessage.Write(false);
-                    netMessage.Send();
+
+                    SpawnDustNetMsg.SerializeAndSendPlayer(
+                        mod,
+                        player.whoAmI,
+                        15,
+                        false,
+                        false,
+                        1.0f);
                 }
                 if (specialTimer > 1)
                 {
@@ -4010,14 +4015,15 @@ namespace RPG
                 for(int i=0; i<30; i++)
                 {
                     int dust = Dust.NewDust(player.position, player.width, player.height, 1);
-                    Main.dust[dust].velocity *= 3;
-                    var netMessage = mod.GetPacket();
-                    netMessage.Write("Dust");
-                    netMessage.Write(player.whoAmI);
-                    netMessage.Write(1);
-                    netMessage.Write(true);
-                    netMessage.Write(3.0);
-                    netMessage.Send();
+                    Main.dust[dust].velocity *= 3.0f;
+
+                    SpawnDustNetMsg.SerializeAndSendPlayer(
+                        mod,
+                        player.whoAmI,
+                        1,
+                        true,
+                        false,
+                        3.0f);
                 }
             }
             if(warmage && specialTimer > 0)
@@ -4054,14 +4060,16 @@ namespace RPG
             {
                 player.magicDamage += .1f * special2;
             }
-            if(pharaoh && specialTimer > 0)
+            if(pharaoh && specialTimer > 0)  // Sandstorm
             {
+                // Bigger bonus in desert
                 if (special2 == 1)
                 {
                     player.magicDamage *= 1.3f;
                 }
-                //sandstorm visuals
-                for(int i=0; i<10; i++)
+
+                // Sandstorm visuals
+                for (int i=0; i<10; i++)
                 {
                     Vector2 spawnPos = new Vector2(player.position.X - 96, player.position.Y + 32);
                     int d = Dust.NewDust(spawnPos, player.width + 192, player.height, 32);
@@ -4072,12 +4080,13 @@ namespace RPG
                     Main.dust[d].velocity += player.velocity;
                     if(Main.netMode != 0)
                     {
-                        var netMessage = mod.GetPacket();
-                        netMessage.Write("Sandstorm");
-                        netMessage.Write(player.whoAmI);
-                        netMessage.Send();
+                        SandstormVisualsNetMsg.SerializeAndSend(
+                            mod,
+                            player.whoAmI);
                     }
                 }
+
+                // Sandstorm damage
                 if (specialTimer % 15 == 0)
                 {
                     float scalar = .5f + (float)Math.Pow(specialProgressionCount, 1.5) / 7f;
@@ -4117,32 +4126,33 @@ namespace RPG
             }
             else if(angel && specialTimer > 0)
             {
-                float lightScale = 1 * (1+specialProgressionCount / 28);
-                Lighting.AddLight((int)(player.Center.X / 16f), (int)(player.Center.Y / 16f), 2f*lightScale, 2f*lightScale, 2f*lightScale);
+                float lightScale = 1f * (1f + specialProgressionCount / 28f);
+                float lightAmount = 2f * lightScale;
+                Lighting.AddLight((int)(player.Center.X / 16f), (int)(player.Center.Y / 16f), lightAmount, lightAmount, lightAmount);
                 for(int i=0; i<3; i++)
                 {
                     int d = Dust.NewDust(player.position, player.width, player.height, 91);
-                    Main.dust[d].velocity *= 7*lightScale;
+                    Main.dust[d].velocity *= 7.0f * lightScale;
                     Main.dust[d].noGravity = true;
                     if(Main.netMode != 0)
                     {
-                        var netMessage = mod.GetPacket();
-                        netMessage.Write("Dust");
-                        netMessage.Write(player.whoAmI);
-                        netMessage.Write(91);
-                        netMessage.Write(true);
-                        netMessage.Write(7 * (double)lightScale);
-                        netMessage.Send();
+                        SpawnDustNetMsg.SerializeAndSendPlayer(
+                            mod,
+                            player.whoAmI,
+                            91,
+                            true,
+                            false,
+                            7.0f * lightScale);
                     }
                 }
                 if (specialTimer % 15 == 0)
                 {
-                    float scalar = .5f + (float)Math.Pow(specialProgressionCount, 1.5) / 7;
-                    float damage = 4 * scalar * player.magicDamage;
-                    float heal = 1 + specialProgressionCount / 2f;
-                    heal *= player.magicDamage;
-                    DamageAreaNoDefense(player.Center, (int)(130*lightScale), (int)damage, 1);
-                    HealArea(player.Center, (int)(130*lightScale), (int)heal);
+                    float damageScalar = 0.5f + (float)Math.Pow(specialProgressionCount, 1.5f) / 7.0f;
+                    int damage = (int)(player.magicDamage * 4.0f * damageScalar);
+                    int heal = (int)(player.magicDamage * (1.0f + specialProgressionCount / 2.0f));
+                    int width = (int)(130.0f * lightScale);
+                    DamageAreaNoDefense(player.Center, width, damage, 1);
+                    HealArea(player.Center, width, heal);
                 }
             }
             else if(heritor && special3 > 0)
@@ -4806,7 +4816,7 @@ namespace RPG
             }
         }
 
-        public void HealArea(Vector2 p, int width, int healAmount)//hostile npcs, no crit, no immunity // bad comment?
+        public void HealArea(Vector2 p, int width, int healAmount)  // Hostile npcs, no crit, no immunity // bad comment?
         {
             Microsoft.Xna.Framework.Rectangle healbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);
             for (int i = 0; i < 256; i++)
@@ -4816,16 +4826,16 @@ namespace RPG
                 {
                     Main.player[i].statLife += healAmount;
                     Main.player[i].HealEffect(healAmount);
-                    var netMessage = mod.GetPacket();
-                    netMessage.Write("Heal");
-                    netMessage.Write(i);
-                    netMessage.Write(healAmount);
-                    netMessage.Send();
+
+                    HealPlayerNetMsg.SerializeAndSend(
+                        mod,
+                        i,
+                        healAmount);
                 }
             }
         }
 
-        public static void DamageAreaNoDefense(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
+        public static void DamageAreaNoDefense(Vector2 p, int width, int damage, int knockback)  // Hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);
             Microsoft.Xna.Framework.Rectangle hurtbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);

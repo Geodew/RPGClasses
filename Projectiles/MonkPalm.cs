@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RPG.PacketMessages;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -54,12 +55,10 @@ namespace RPG.Projectiles
                 target.velocity = vel;
                 if(Main.netMode != 0)
                 {
-                    var netmessage = mod.GetPacket();
-                    netmessage.Write("VelNPC");
-                    netmessage.Write((double)vel.X);
-                    netmessage.Write((double)vel.Y);
-                    netmessage.Write(target.whoAmI);
-                    netmessage.Send();
+                    VelocityChangeNpcNetMsg.SerializeAndSend(
+                        mod,
+                        vel,
+                        target.whoAmI);
                 }
                 target.AddBuff(mod.BuffType("MonkPalm"), 60);
                 info.monkPalmOwner = projectile.owner;

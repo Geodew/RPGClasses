@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using RPG.PacketMessages;
 
 namespace RPG
 {
@@ -37,104 +38,108 @@ namespace RPG
             {
                 return;
             }
-            for(int i=0; i<256; i++)
+            for(int i = 0; i < 256; i++)
             {
                 if (Main.player[i].active)
                 {
                     Player p = Main.player[i];
                     MPlayer player = (MPlayer)(p.GetModPlayer(mod, "MPlayer"));
-                    int msgType = 0;
-                    if(npc.type == 4 && !player.killedEye)
-                    {
-                        player.killedEye = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                        msgType = 1;
-                    }
-                    if ((npc.type == 13 || npc.type == 14 || npc.type == 15 || npc.type == 266) && !player.killedWormOrBrain)
-                    {
-                        player.killedWormOrBrain = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                        msgType = 2;
-                    }
-                    if (npc.type == 35 && !player.killedSkelly)
-                    {
-                        player.killedSkelly = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                        msgType = 3;
-                    }
-                    if (npc.type == NPCID.QueenBee && !player.killedBee)
-                    {
-                        msgType = 4;
-                        player.killedBee = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
-                    }
+                    bool leveledUp = false;
+                    BossGroupEnum msgType = BossGroupEnum.INVALID;
+
                     if (npc.type == NPCID.KingSlime && !player.killedSlime)
                     {
-                        msgType = 5;
+                        msgType = BossGroupEnum.KING_SLIME;
                         player.killedSlime = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.WallofFlesh && !player.killedWall)
+                    else if (npc.type == NPCID.EyeofCthulhu && !player.killedEye)
                     {
-                        msgType = 6;
+                        msgType = BossGroupEnum.EYE_OF_CTHULHU;
+                        player.killedEye = true;
+                        leveledUp = true;
+                    }
+                    else if ((npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail || npc.type == NPCID.BrainofCthulhu) && !player.killedWormOrBrain)
+                    {
+                        msgType = BossGroupEnum.BRAIN_OF_CTHULHU_OR_EATER_OF_WORLDS;
+                        player.killedWormOrBrain = true;
+                        leveledUp = true;
+                    }
+                    else if (npc.type == NPCID.SkeletronHead && !player.killedSkelly)
+                    {
+                        msgType = BossGroupEnum.SKELETRON;
+                        player.killedSkelly = true;
+                        leveledUp = true;
+                    }
+                    else if (npc.type == NPCID.QueenBee && !player.killedBee)
+                    {
+                        msgType = BossGroupEnum.QUEEN_BEE;
+                        player.killedBee = true;
+                        leveledUp = true;
+                    }
+                    else if (npc.type == NPCID.WallofFlesh && !player.killedWall)
+                    {
+                        msgType = BossGroupEnum.WALL_OF_FLESH;
                         player.killedWall = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.TheDestroyer && !player.killedDestroyer)
+                    else if (npc.type == NPCID.TheDestroyer && !player.killedDestroyer)
                     {
-                        msgType = 7;
+                        msgType = BossGroupEnum.DESTROYER;
                         player.killedDestroyer = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if ((npc.type == 125 || npc.type == 126)&& !player.killedTwins)
+                    else if ((npc.type == NPCID.Retinazer || npc.type == NPCID.Spazmatism) && !player.killedTwins)
                     {
-                        msgType = 8;
+                        msgType = BossGroupEnum.TWINS;
                         player.killedTwins = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.SkeletronPrime && !player.killedPrime)
+                    else if (npc.type == NPCID.SkeletronPrime && !player.killedPrime)
                     {
-                        msgType = 9;
+                        msgType = BossGroupEnum.SKELETRON_PRIME;
                         player.killedPrime = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.Plantera && !player.killedPlant)
+                    else if (npc.type == NPCID.Plantera && !player.killedPlant)
                     {
-                        msgType = 10;
+                        msgType = BossGroupEnum.PLANTERA;
                         player.killedPlant = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.Golem && !player.killedGolem)
+                    else if (npc.type == NPCID.Golem && !player.killedGolem)
                     {
-                        msgType = 11;
+                        msgType = BossGroupEnum.GOLEM;
                         player.killedGolem = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.DukeFishron && !player.killedFish)
+                    else if (npc.type == NPCID.DukeFishron && !player.killedFish)
                     {
-                        msgType = 12;
+                        msgType = BossGroupEnum.DUKE_FISHRON;
                         player.killedFish = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.CultistBoss && !player.killedCultist)
+                    else if (npc.type == NPCID.CultistBoss && !player.killedCultist)
                     {
-                        msgType = 13;
+                        msgType = BossGroupEnum.LUNATIC_CULTIST;
                         player.killedCultist = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (npc.type == NPCID.MoonLordCore && !player.killedMoon)
+                    else if (npc.type == NPCID.MoonLordCore && !player.killedMoon)
                     {
-                        msgType = 14;
+                        msgType = BossGroupEnum.MOON_LORD;
                         player.killedMoon = true;
-                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+                        leveledUp = true;
                     }
-                    if (msgType > 0)
+
+                    if (leveledUp)
                     {
-                        var netMessage = mod.GetPacket();
-                        netMessage.Write("Level");
-                        netMessage.Write(p.whoAmI);
-                        netMessage.Write(msgType);
-                        netMessage.Send();
+                        CombatText.NewText(new Rectangle((int)p.position.X, (int)p.position.Y - 50, p.width, p.height), new Color(255, 255, 255, 255), "LEVEL UP!", true);
+
+                        LevelUpPlayerNetMsg.SerializeAndSend(
+                            mod,
+                            p.whoAmI,
+                            msgType);
                     }
                 }
             }
