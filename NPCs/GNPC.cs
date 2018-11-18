@@ -139,6 +139,7 @@ namespace RPG
                 }
             }
         }
+
         public override bool StrikeNPC(NPC npc, ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
@@ -156,6 +157,7 @@ namespace RPG
             }
             return base.StrikeNPC(npc, ref damage, defense, ref knockback, hitDirection, ref crit);
         }
+
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
@@ -178,6 +180,7 @@ namespace RPG
                 damage = (int)(damage * info.mothAmp);
             }
         }
+
         public override void ModifyHitPlayer(NPC npc, Player target, ref int damage, ref bool crit)
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
@@ -186,6 +189,7 @@ namespace RPG
                 damage = (int)(damage * .8);
             }
         }
+
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
             if (npc.type == NPCID.BloodCrawler || npc.type == NPCID.BloodCrawlerWall || npc.type == NPCID.FaceMonster || npc.type == NPCID.Crimera || npc.type == NPCID.BigCrimera || npc.type == NPCID.LittleCrimera)
@@ -206,8 +210,8 @@ namespace RPG
             }
             return base.CanHitPlayer(npc, target, ref cooldownSlot);
         }
-        /*
-        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+
+        /* public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
         {
 
             int shaderID = GameShaders.Armor.GetShaderIdFromItemId(ItemID.ReflectiveGoldDye);
@@ -234,6 +238,7 @@ namespace RPG
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.CreateScale(1f, 1f, 1f) * Matrix.CreateRotationZ(0f) * Matrix.CreateTranslation(new Vector3(0f, 0f, 0f)));
         }*/
+
         public override bool PreAI(NPC npc)
         {
             if (npc.FindBuffIndex(mod.BuffType("MonkPalm"))>= 0)

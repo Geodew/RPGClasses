@@ -29,7 +29,7 @@ namespace RPG
         {
             Player player = Main.player[Main.myPlayer];
             MPlayer mplayer = (MPlayer)(player.GetModPlayer(this, "MPlayer"));
-            if (name.Equals("Active Ability") && player.FindBuffIndex(BuffType("ActiveCooldown"))==-1)
+            if (name.Equals("Active Ability") && (player.FindBuffIndex(BuffType("ActiveCooldown")) == -1))
             {
                 if (mplayer.knight)
                 {
@@ -719,7 +719,7 @@ namespace RPG
             }
         }
 
-        public static void DamageArea(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
+        public static void DamageArea(Vector2 p, int width, int damage, int knockback)  // Hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);
             Microsoft.Xna.Framework.Rectangle hurtbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);

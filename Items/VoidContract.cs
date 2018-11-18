@@ -7,17 +7,15 @@ namespace RPG.Items
     {
         public override void SetDefaults()
         {
-
-
             item.consumable = true;
             item.useStyle = 2;
         }
 
-    public override void SetStaticDefaults()
-    {
-      DisplayName.SetDefault("Void Contract");
-      Tooltip.SetDefault("Revoke your class' powers, allowing a new contract to be signed");
-    }
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Void Contract");
+            Tooltip.SetDefault("Revoke your class' powers, allowing a new contract to be signed");
+        }
 
         public override bool UseItem(Player player)
         {
@@ -65,6 +63,7 @@ namespace RPG.Items
                 player.QuickSpawnItem(mod.ItemType("BlankContract"));
             return true;
         }
+
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

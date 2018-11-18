@@ -28,7 +28,7 @@ namespace RPG
         public bool arcaneSniper = false;
         public bool savage = false;
         public bool ninja = false;
-        public bool rogue = false;//for X seconds, next enemy contacted will deal 0 damage and drop 20-60% plus a scalng flat value of coins
+        public bool rogue = false;  // For X seconds, next enemy contacted will deal 0 damage and drop 20-60% plus a scalng flat value of coins
         public bool soulbound = false;
         public bool explorer = false;
         public bool cavalry = false;
@@ -76,7 +76,7 @@ namespace RPG
         public int special3 = 0;
         public int special4 = 0;
         public int specialTimer = 0;
-        public int specialProgressionCount = 0;//max 14
+        public int specialProgressionCount = 0;  // Max 14 typically, but some classes get bonuses to this
 
         public override TagCompound Save()
         {
@@ -162,7 +162,6 @@ namespace RPG
             }
             catch
             {
-
             }
         }
 
@@ -235,7 +234,6 @@ namespace RPG
             }
             catch
             {
-
             }
         }
 
@@ -4468,6 +4466,7 @@ namespace RPG
             {
                 damage = (int)(damage * (1 - specialProgressionCount / 50.0));
             }
+
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
         }
 
@@ -4479,10 +4478,11 @@ namespace RPG
                 special = 0;
                 player.AddBuff(mod.BuffType("ActiveCooldown"), 900);
             }
+
             base.Hurt(pvp, quiet, damage, hitDirection, crit);
         }
 
-        public override void SetupStartInventory(IList<Item> items)
+        public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
         {
             if (hasClass)
             {
@@ -4494,6 +4494,8 @@ namespace RPG
             i = new Item();
             i.SetDefaults(mod.ItemType("CharacterInfo"));
             items.Add(i);
+
+            //base.SetupStartInventory(items, mediumcoreDeath);  //zzz missing this? See other functions in this file too
         }
 
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -4544,6 +4546,7 @@ namespace RPG
                     }
                 }
             }
+
             return base.Shoot(item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
         }
 
@@ -4611,6 +4614,7 @@ namespace RPG
             {
                 return false;
             }
+
             return base.CanBeHitByNPC(npc, ref cooldownSlot);
         }
 
@@ -4620,6 +4624,7 @@ namespace RPG
             {
                 return false;
             }
+
             return base.CanBeHitByProjectile(proj);
         }
 

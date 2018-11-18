@@ -8,17 +8,15 @@ namespace RPG.Items
     {
         public override void SetDefaults()
         {
-
-
             item.consumable = true;
             item.useStyle = 2;
         }
 
-    public override void SetStaticDefaults()
-    {
-      DisplayName.SetDefault("Celestial Contract");
-      Tooltip.SetDefault("Class orbited by miniature stars");
-    }
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Celestial Contract");
+            Tooltip.SetDefault("Class orbited by miniature stars");
+        }
 
         public override bool UseItem(Player player)
         {
@@ -30,9 +28,12 @@ namespace RPG.Items
             mplayer.hasClass = true;
             mplayer.celestial = true;
             if (player.whoAmI == Main.myPlayer)
+            {
                 player.QuickSpawnItem(ItemID.FallenStar);
+            }
             return true;
         }
+
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

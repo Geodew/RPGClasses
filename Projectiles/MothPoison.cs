@@ -18,6 +18,7 @@ namespace RPG.Projectiles
             projectile.penetrate = -1;
             projectile.tileCollide = true;
         }
+
         public override void AI()
         {
             projectile.rotation += (float)Math.Cos(projectile.timeLeft)/20;
@@ -29,6 +30,7 @@ namespace RPG.Projectiles
                 projectile.velocity.Y = 2f;
             }
         }
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Player player = Main.player[projectile.owner];
