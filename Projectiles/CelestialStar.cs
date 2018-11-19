@@ -63,13 +63,18 @@ namespace RPG.Projectiles
             projectile.position.X = p.Center.X - (float)(Math.Cos(rad) * dist) - projectile.width / 4f;
             projectile.position.Y = p.Center.Y - (float)(Math.Sin(rad) * dist) - projectile.height / 4f;
             projectile.ai[0] += 1f + projectile.ai[1]/1.5f; //angle change in degrees
+            if (projectile.ai[0] > 360.0f)
+            {
+                // Wrap angle
+                projectile.ai[0] -= 360.0f;
+            }
 
             // Visuals
 
             if (projectile.alpha < 170)
             {
                 Vector2 adj = projectile.position - projectile.oldPosition;
-                for (int num136 = 0; num136 < 3; num136++)
+                for (int num136 = 0; num136 < 3; num136++)  //zzz rename
                 {
                     float x2 = projectile.position.X + 4f - adj.X / 10f * num136 * 4f;
                     float y2 = projectile.position.Y + 4f - adj.Y / 10f * num136 * 4f;
