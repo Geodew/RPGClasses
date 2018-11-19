@@ -60,6 +60,8 @@ namespace RPG.PacketMessages
             newPacket.Write(newVelocityX);
             newPacket.Write(newVelocityY);
             newPacket.Write(npcIndex);
+
+            newPacket.Send();
         }
 
         private void Deserialize(

@@ -15,6 +15,7 @@ namespace RPG
     {
         public bool hasClass = false;
 
+        #region Class flags
         public bool knight = false;
         public bool berserker = false;
         public bool fortress = false;
@@ -56,12 +57,13 @@ namespace RPG
         public bool monk = false;
         public bool warpKnight = false;
         public bool heritor = false;
-        #region killed bosses
+        #endregion
+        #region Killed boss flags
+        public bool killedSlime = false;
         public bool killedEye = false;
         public bool killedWormOrBrain = false;
         public bool killedSkelly = false;
         public bool killedBee = false;
-        public bool killedSlime = false;
         public bool killedWall = false;
         public bool killedDestroyer = false;
         public bool killedTwins = false;
@@ -82,19 +84,38 @@ namespace RPG
         public override TagCompound Save()
         {
             TagCompound data = new TagCompound();
+
+            byte[] version = new byte[] { 0, 4, 3 };
+            data.Add("Version", version);
+
             bool[] classes = new bool[] {hasClass, knight, berserker, fortress, sage, warmage, conjuror, spiritMage, contractedSword, wanderer, marksman, ranger,
                 arcaneSniper, savage, ninja, rogue, soulbound, explorer, cavalry, merman, werewolf, harpy, angel, demon, dwarf, bloodKnight, taintedElf, hallowMage, pharaoh,
                 pirate, jungleShaman, viking, truffle, dragoon, chronomancer, angler, celestial, voidwalker, moth, monk, warpKnight, heritor};
             byte[] classByte = Array.ConvertAll(classes, b => b ? (byte)1 : (byte)0);
             data.Add("Classes", classByte);
+
             bool[] bosses = new bool[] {killedEye, killedWormOrBrain, killedSkelly, killedBee, killedSlime, killedWall, killedDestroyer, killedTwins,
                 killedPrime, killedPlant, killedGolem, killedFish, killedCultist, killedMoon};
             byte[] bossByte = Array.ConvertAll(bosses, b => b ? (byte)1 : (byte)0);
             data.Add("Bosses", bossByte);
+
             return data;
         }
 
         public override void Load(TagCompound tag)
+        {
+            Load_v0_4_3(tag);
+
+            if (player.whoAmI == Main.myPlayer)
+            {
+                PlayerClassLevelInfoNetMsg.SerializeAndSend(
+                    mod,
+                    this,
+                    true);
+            }
+        }
+
+        public void Load_v0_4_3(TagCompound tag)
         {
             byte[] bossByte = tag.GetByteArray("Bosses");
             bool[] bosses = Array.ConvertAll(bossByte, b => (b == 0) ? false : true);
@@ -113,6 +134,7 @@ namespace RPG
             killedFish = bosses[i++];
             killedCultist = bosses[i++];
             killedMoon = bosses[i++];
+
             byte[] classByte = tag.GetByteArray("Classes");
             bool[] classes = Array.ConvertAll(classByte, b => (b == 0) ? false : true);
             i = 0;
@@ -166,77 +188,77 @@ namespace RPG
             }
         }
 
-        public override void LoadLegacy(BinaryReader reader)
-        {
-            if (reader.PeekChar() == -1)
-            {
-                return;
-            }
-            try
-            {
-                hasClass = reader.ReadBoolean();
-                knight = reader.ReadBoolean();
-                berserker = reader.ReadBoolean();
-                fortress = reader.ReadBoolean();
-                sage = reader.ReadBoolean();
-                warmage = reader.ReadBoolean();
-                conjuror = reader.ReadBoolean();
-                spiritMage = reader.ReadBoolean();
-                contractedSword = reader.ReadBoolean();
-                wanderer = reader.ReadBoolean();
-                marksman = reader.ReadBoolean();
-                ranger = reader.ReadBoolean();
-                arcaneSniper = reader.ReadBoolean();
-                savage = reader.ReadBoolean();
-                ninja = reader.ReadBoolean();
-                //rogue = reader.ReadBoolean();
-                soulbound = reader.ReadBoolean();
-                explorer = reader.ReadBoolean();
-                cavalry = reader.ReadBoolean();
-                merman = reader.ReadBoolean();
-                werewolf = reader.ReadBoolean();
-                harpy = reader.ReadBoolean();
-                angel = reader.ReadBoolean();
-                demon = reader.ReadBoolean();
-                dwarf = reader.ReadBoolean();
-                bloodKnight = reader.ReadBoolean();
-                taintedElf = reader.ReadBoolean();
-                hallowMage = reader.ReadBoolean();
-                pharaoh = reader.ReadBoolean();
-                pirate = reader.ReadBoolean();
-                jungleShaman = reader.ReadBoolean();
-                viking = reader.ReadBoolean();
-                truffle = reader.ReadBoolean();
-                dragoon = reader.ReadBoolean();
-                chronomancer = reader.ReadBoolean();
-                angler = reader.ReadBoolean();
-                celestial = reader.ReadBoolean();
-                voidwalker = reader.ReadBoolean();
-                moth = reader.ReadBoolean();
-                monk = reader.ReadBoolean();
+        //public override void LoadLegacy(BinaryReader reader)
+        //{
+        //    if (reader.PeekChar() == -1)
+        //    {
+        //        return;
+        //    }
+        //    try
+        //    {
+        //        hasClass = reader.ReadBoolean();
+        //        knight = reader.ReadBoolean();
+        //        berserker = reader.ReadBoolean();
+        //        fortress = reader.ReadBoolean();
+        //        sage = reader.ReadBoolean();
+        //        warmage = reader.ReadBoolean();
+        //        conjuror = reader.ReadBoolean();
+        //        spiritMage = reader.ReadBoolean();
+        //        contractedSword = reader.ReadBoolean();
+        //        wanderer = reader.ReadBoolean();
+        //        marksman = reader.ReadBoolean();
+        //        ranger = reader.ReadBoolean();
+        //        arcaneSniper = reader.ReadBoolean();
+        //        savage = reader.ReadBoolean();
+        //        ninja = reader.ReadBoolean();
+        //        //rogue = reader.ReadBoolean();
+        //        soulbound = reader.ReadBoolean();
+        //        explorer = reader.ReadBoolean();
+        //        cavalry = reader.ReadBoolean();
+        //        merman = reader.ReadBoolean();
+        //        werewolf = reader.ReadBoolean();
+        //        harpy = reader.ReadBoolean();
+        //        angel = reader.ReadBoolean();
+        //        demon = reader.ReadBoolean();
+        //        dwarf = reader.ReadBoolean();
+        //        bloodKnight = reader.ReadBoolean();
+        //        taintedElf = reader.ReadBoolean();
+        //        hallowMage = reader.ReadBoolean();
+        //        pharaoh = reader.ReadBoolean();
+        //        pirate = reader.ReadBoolean();
+        //        jungleShaman = reader.ReadBoolean();
+        //        viking = reader.ReadBoolean();
+        //        truffle = reader.ReadBoolean();
+        //        dragoon = reader.ReadBoolean();
+        //        chronomancer = reader.ReadBoolean();
+        //        angler = reader.ReadBoolean();
+        //        celestial = reader.ReadBoolean();
+        //        voidwalker = reader.ReadBoolean();
+        //        moth = reader.ReadBoolean();
+        //        monk = reader.ReadBoolean();
 
-                killedEye = reader.ReadBoolean();
-                killedWormOrBrain = reader.ReadBoolean();
-                killedSkelly = reader.ReadBoolean();
-                killedBee = reader.ReadBoolean();
-                killedSlime = reader.ReadBoolean();
-                killedWall = reader.ReadBoolean();
-                killedDestroyer = reader.ReadBoolean();
-                killedTwins = reader.ReadBoolean();
-                killedPrime = reader.ReadBoolean();
-                killedPlant = reader.ReadBoolean();
-                killedGolem = reader.ReadBoolean();
-                killedFish = reader.ReadBoolean();
-                killedCultist = reader.ReadBoolean();
-                killedMoon = reader.ReadBoolean();
+        //        killedEye = reader.ReadBoolean();
+        //        killedWormOrBrain = reader.ReadBoolean();
+        //        killedSkelly = reader.ReadBoolean();
+        //        killedBee = reader.ReadBoolean();
+        //        killedSlime = reader.ReadBoolean();
+        //        killedWall = reader.ReadBoolean();
+        //        killedDestroyer = reader.ReadBoolean();
+        //        killedTwins = reader.ReadBoolean();
+        //        killedPrime = reader.ReadBoolean();
+        //        killedPlant = reader.ReadBoolean();
+        //        killedGolem = reader.ReadBoolean();
+        //        killedFish = reader.ReadBoolean();
+        //        killedCultist = reader.ReadBoolean();
+        //        killedMoon = reader.ReadBoolean();
 
-                //new classes, avoid mixed up save/load for updates by loading last
+        //        //new classes, avoid mixed up save/load for updates by loading last
 
-            }
-            catch
-            {
-            }
-        }
+        //    }
+        //    catch
+        //    {
+        //    }
+        //}
 
         public override void ResetEffects()
         {
@@ -4462,19 +4484,19 @@ namespace RPG
                 damage = (int)(damage * .1);
                 damage = Math.Max(damage, 1);
             }
-            if (dragoon && player.velocity.Y > 0)
+            if (dragoon && player.velocity.Y > 0.0f)
             {
-                float reduce = 1 - player.velocity.Y / 200;
+                float reduce = 1.0f - player.velocity.Y / 200.0f;
                 if (special > 0)
                 {
-                    reduce *= .5f;
+                    reduce *= 0.5f;
                 }
-                reduce = Math.Max(.15f, reduce);
+                reduce = Math.Max(0.15f, reduce);
                 damage = (int)(reduce * damage);
             }
             if(monk && (player.head <= 0 && player.body <= 0 && player.legs <= 0))
             {
-                damage = (int)(damage * (1 - specialProgressionCount / 50.0));
+                damage = (int)(damage * (1.0 - specialProgressionCount / 50.0));
             }
 
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
@@ -4482,7 +4504,7 @@ namespace RPG
 
         public override void Hurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
-            if (sage && specialTimer > 1)//interrupt charge
+            if (sage && specialTimer > 1)  // Interrupt charge
             {
                 specialTimer = 0;
                 special = 0;
@@ -4505,7 +4527,7 @@ namespace RPG
             i.SetDefaults(mod.ItemType("CharacterInfo"));
             items.Add(i);
 
-            //base.SetupStartInventory(items, mediumcoreDeath);  //zzz missing this? See other functions in this file too
+            base.SetupStartInventory(items, mediumcoreDeath);  //zzz missing this? See other functions in this file too
         }
 
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -4587,16 +4609,16 @@ namespace RPG
             }
             else if (conjuror && specialTimer > 0 && (proj.minion || proj.type == 374 || proj.type == 376 || proj.type == 378 || proj.type == 379 || proj.type == 389 || proj.type == 408 || proj.type == 433 || proj.type == 614 || proj.type == 624 || proj.type == 195 || proj.type == 642 || proj.type == 644))
             {
-                damage = (int)(damage * (1 + Math.Sqrt(special2) / 12.0));
+                damage = (int)(damage * (1.0 + Math.Sqrt(special2) / 12.0));
                 Main.NewText(special2 + "");
             }
             else if(soulbound && specialTimer > 0 && player.FindBuffIndex(23) >= 0 && (proj.minion || proj.type == 374 || proj.type == 376 || proj.type == 378 || proj.type == 379 || proj.type == 389 || proj.type == 408 || proj.type == 433 || proj.type == 614 || proj.type == 624 || proj.type == 195 || proj.type == 642 || proj.type == 644))
             {
-                damage = (int)(damage *(1.1 + (.03 * specialProgressionCount)));
+                damage = (int)(damage * (1.1 + (0.03 * specialProgressionCount)));
             }
-            else if (dragoon && player.velocity.Y > 0)
+            else if (dragoon && (player.velocity.Y > 0.0f))
             {
-                float bonus = player.velocity.Y / 30;
+                float bonus = player.velocity.Y / 30.0f;
                 if (special > 0)
                 {
                     bonus *= 1.5f;
