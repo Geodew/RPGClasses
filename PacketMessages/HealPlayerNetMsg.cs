@@ -38,12 +38,15 @@ namespace RPG.PacketMessages
                 int playerId,
                 int healAmount)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != 0)  // Not single-player
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write(playerId);
-            newPacket.Write(healAmount);
+                newPacket.Write(playerId);
+                newPacket.Write(healAmount);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(

@@ -151,12 +151,15 @@ namespace RPG.PacketMessages
                 int playerId,
                 BossGroupEnum bossDefeated)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != 0)  // Not single-player
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write(playerId);
-            newPacket.Write((int)bossDefeated);
+                newPacket.Write(playerId);
+                newPacket.Write((int)bossDefeated);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(

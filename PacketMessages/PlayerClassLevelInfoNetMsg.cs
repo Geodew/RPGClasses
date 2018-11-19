@@ -173,72 +173,75 @@ namespace RPG.PacketMessages
                 MPlayer modPlayer,
                 bool requestPeerInfo)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != 0)  // Not single-player
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write(modPlayer.player.whoAmI);
-            newPacket.Write(requestPeerInfo);
+                newPacket.Write(modPlayer.player.whoAmI);
+                newPacket.Write(requestPeerInfo);
 
-            #region Class flags
-            newPacket.Write(modPlayer.knight);
-            newPacket.Write(modPlayer.berserker);
-            newPacket.Write(modPlayer.fortress);
-            newPacket.Write(modPlayer.sage);
-            newPacket.Write(modPlayer.warmage);
-            newPacket.Write(modPlayer.conjuror);
-            newPacket.Write(modPlayer.spiritMage);
-            newPacket.Write(modPlayer.contractedSword);
-            newPacket.Write(modPlayer.wanderer);
-            newPacket.Write(modPlayer.marksman);
-            newPacket.Write(modPlayer.ranger);
-            newPacket.Write(modPlayer.arcaneSniper);
-            newPacket.Write(modPlayer.savage);
-            newPacket.Write(modPlayer.ninja);
-            newPacket.Write(modPlayer.rogue);
-            newPacket.Write(modPlayer.soulbound);
-            newPacket.Write(modPlayer.explorer);
-            newPacket.Write(modPlayer.cavalry);
-            newPacket.Write(modPlayer.merman);
-            newPacket.Write(modPlayer.werewolf);
-            newPacket.Write(modPlayer.harpy);
-            newPacket.Write(modPlayer.angel);
-            newPacket.Write(modPlayer.demon);
-            newPacket.Write(modPlayer.dwarf);
-            newPacket.Write(modPlayer.bloodKnight);
-            newPacket.Write(modPlayer.taintedElf);
-            newPacket.Write(modPlayer.hallowMage);
-            newPacket.Write(modPlayer.pharaoh);
-            newPacket.Write(modPlayer.pirate);
-            newPacket.Write(modPlayer.jungleShaman);
-            newPacket.Write(modPlayer.viking);
-            newPacket.Write(modPlayer.truffle);
-            newPacket.Write(modPlayer.dragoon);
-            newPacket.Write(modPlayer.chronomancer);
-            newPacket.Write(modPlayer.angler);
-            newPacket.Write(modPlayer.celestial);
-            newPacket.Write(modPlayer.voidwalker);
-            newPacket.Write(modPlayer.moth);
-            newPacket.Write(modPlayer.monk);
-            newPacket.Write(modPlayer.warpKnight);
-            newPacket.Write(modPlayer.heritor);
-            #endregion
-            #region Killed boss flags
-            newPacket.Write(modPlayer.killedSlime);
-            newPacket.Write(modPlayer.killedEye);
-            newPacket.Write(modPlayer.killedWormOrBrain);
-            newPacket.Write(modPlayer.killedSkelly);
-            newPacket.Write(modPlayer.killedBee);
-            newPacket.Write(modPlayer.killedWall);
-            newPacket.Write(modPlayer.killedDestroyer);
-            newPacket.Write(modPlayer.killedTwins);
-            newPacket.Write(modPlayer.killedPrime);
-            newPacket.Write(modPlayer.killedPlant);
-            newPacket.Write(modPlayer.killedGolem);
-            newPacket.Write(modPlayer.killedFish);
-            newPacket.Write(modPlayer.killedCultist);
-            newPacket.Write(modPlayer.killedMoon);
-            #endregion
+                #region Class flags
+                newPacket.Write(modPlayer.knight);
+                newPacket.Write(modPlayer.berserker);
+                newPacket.Write(modPlayer.fortress);
+                newPacket.Write(modPlayer.sage);
+                newPacket.Write(modPlayer.warmage);
+                newPacket.Write(modPlayer.conjuror);
+                newPacket.Write(modPlayer.spiritMage);
+                newPacket.Write(modPlayer.contractedSword);
+                newPacket.Write(modPlayer.wanderer);
+                newPacket.Write(modPlayer.marksman);
+                newPacket.Write(modPlayer.ranger);
+                newPacket.Write(modPlayer.arcaneSniper);
+                newPacket.Write(modPlayer.savage);
+                newPacket.Write(modPlayer.ninja);
+                newPacket.Write(modPlayer.rogue);
+                newPacket.Write(modPlayer.soulbound);
+                newPacket.Write(modPlayer.explorer);
+                newPacket.Write(modPlayer.cavalry);
+                newPacket.Write(modPlayer.merman);
+                newPacket.Write(modPlayer.werewolf);
+                newPacket.Write(modPlayer.harpy);
+                newPacket.Write(modPlayer.angel);
+                newPacket.Write(modPlayer.demon);
+                newPacket.Write(modPlayer.dwarf);
+                newPacket.Write(modPlayer.bloodKnight);
+                newPacket.Write(modPlayer.taintedElf);
+                newPacket.Write(modPlayer.hallowMage);
+                newPacket.Write(modPlayer.pharaoh);
+                newPacket.Write(modPlayer.pirate);
+                newPacket.Write(modPlayer.jungleShaman);
+                newPacket.Write(modPlayer.viking);
+                newPacket.Write(modPlayer.truffle);
+                newPacket.Write(modPlayer.dragoon);
+                newPacket.Write(modPlayer.chronomancer);
+                newPacket.Write(modPlayer.angler);
+                newPacket.Write(modPlayer.celestial);
+                newPacket.Write(modPlayer.voidwalker);
+                newPacket.Write(modPlayer.moth);
+                newPacket.Write(modPlayer.monk);
+                newPacket.Write(modPlayer.warpKnight);
+                newPacket.Write(modPlayer.heritor);
+                #endregion
+                #region Killed boss flags
+                newPacket.Write(modPlayer.killedSlime);
+                newPacket.Write(modPlayer.killedEye);
+                newPacket.Write(modPlayer.killedWormOrBrain);
+                newPacket.Write(modPlayer.killedSkelly);
+                newPacket.Write(modPlayer.killedBee);
+                newPacket.Write(modPlayer.killedWall);
+                newPacket.Write(modPlayer.killedDestroyer);
+                newPacket.Write(modPlayer.killedTwins);
+                newPacket.Write(modPlayer.killedPrime);
+                newPacket.Write(modPlayer.killedPlant);
+                newPacket.Write(modPlayer.killedGolem);
+                newPacket.Write(modPlayer.killedFish);
+                newPacket.Write(modPlayer.killedCultist);
+                newPacket.Write(modPlayer.killedMoon);
+                #endregion
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(

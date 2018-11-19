@@ -54,14 +54,17 @@ namespace RPG.PacketMessages
                 float newVelocityY,
                 int npcIndex)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != 0)  // Not single-player
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write((int)mPacketMessageType);
-            newPacket.Write(newVelocityX);
-            newPacket.Write(newVelocityY);
-            newPacket.Write(npcIndex);
+                newPacket.Write((int)mPacketMessageType);
+                newPacket.Write(newVelocityX);
+                newPacket.Write(newVelocityY);
+                newPacket.Write(npcIndex);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(

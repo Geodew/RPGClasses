@@ -45,11 +45,14 @@ namespace RPG.PacketMessages
                 Mod mod,
                 int playerId)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != 0)  // Not single-player
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write(playerId);
+                newPacket.Write(playerId);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(
