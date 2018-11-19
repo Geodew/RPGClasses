@@ -104,14 +104,12 @@ namespace RPG
 
         public override void Load(TagCompound tag)
         {
-            Load_v0_4_3(tag);
-
-            if (player.whoAmI == Main.myPlayer)
+            try  // Prevent data loss or failed character load if something goes wrong in here
             {
-                PlayerClassLevelInfoNetMsg.SerializeAndSend(
-                    mod,
-                    this,
-                    true);
+                Load_v0_4_3(tag);
+            }
+            catch
+            {
             }
         }
 
@@ -259,6 +257,25 @@ namespace RPG
         //    {
         //    }
         //}
+
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            try
+            {
+                if (newPlayer && (player.whoAmI == Main.myPlayer))
+                {
+                    PlayerClassLevelInfoNetMsg.SerializeAndSend(
+                        mod,
+                        this,
+                        true);
+                }
+            }
+            catch
+            {
+            }
+
+            base.SyncPlayer(toWho, fromWho, newPlayer);
+        }
 
         public override void ResetEffects()
         {
