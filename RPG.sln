@@ -5,6 +5,18 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPG", "RPG.csproj", "{D02CACDD-2DBC-40AC-BCD1-0E02F6FADDEE}"
 EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "Terraria", "..\..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Terraria\Terraria.exe", "{D8E860B2-5FA2-49BC-8DBE-2916511FBAF9}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Program Files (x86)\Steam\steamapps\common\Terraria\Terraria.exe
+		StartingDirectory = C:\Program Files (x86)\Steam\steamapps\common\Terraria
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +27,8 @@ Global
 		{D02CACDD-2DBC-40AC-BCD1-0E02F6FADDEE}.Debug|x86.Build.0 = Debug|Any CPU
 		{D02CACDD-2DBC-40AC-BCD1-0E02F6FADDEE}.Release|x86.ActiveCfg = Release|Any CPU
 		{D02CACDD-2DBC-40AC-BCD1-0E02F6FADDEE}.Release|x86.Build.0 = Release|Any CPU
+		{D8E860B2-5FA2-49BC-8DBE-2916511FBAF9}.Debug|x86.ActiveCfg = Release|x86
+		{D8E860B2-5FA2-49BC-8DBE-2916511FBAF9}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

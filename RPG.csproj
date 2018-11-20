@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -131,7 +132,7 @@
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Terraria\Terraria.exe</HintPath>
     </Reference>
     <Reference Include="tmodloader">
-      <HintPath>..\..\..\..\..\..\Desktop\ModLoader\tmodloader.exe</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\tModLoader\tmodloader.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
