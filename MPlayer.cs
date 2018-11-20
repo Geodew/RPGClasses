@@ -85,19 +85,25 @@ namespace RPG
         {
             TagCompound data = new TagCompound();
 
-            byte[] version = new byte[] { 0, 4, 3 };
-            data.Add("Version", version);
+            try  // Prevent data loss or failed character save if something goes wrong in here
+            {
+                byte[] version = new byte[] { 0, 4, 3 };
+                data.Add("Version", version);
 
-            bool[] classes = new bool[] {hasClass, knight, berserker, fortress, sage, warmage, conjuror, spiritMage, contractedSword, wanderer, marksman, ranger,
+                bool[] classes = new bool[] {hasClass, knight, berserker, fortress, sage, warmage, conjuror, spiritMage, contractedSword, wanderer, marksman, ranger,
                 arcaneSniper, savage, ninja, rogue, soulbound, explorer, cavalry, merman, werewolf, harpy, angel, demon, dwarf, bloodKnight, taintedElf, hallowMage, pharaoh,
                 pirate, jungleShaman, viking, truffle, dragoon, chronomancer, angler, celestial, voidwalker, moth, monk, warpKnight, heritor};
-            byte[] classByte = Array.ConvertAll(classes, b => b ? (byte)1 : (byte)0);
-            data.Add("Classes", classByte);
+                byte[] classByte = Array.ConvertAll(classes, b => b ? (byte)1 : (byte)0);
+                data.Add("Classes", classByte);
 
-            bool[] bosses = new bool[] {killedEye, killedWormOrBrain, killedSkelly, killedBee, killedSlime, killedWall, killedDestroyer, killedTwins,
+                bool[] bosses = new bool[] {killedEye, killedWormOrBrain, killedSkelly, killedBee, killedSlime, killedWall, killedDestroyer, killedTwins,
                 killedPrime, killedPlant, killedGolem, killedFish, killedCultist, killedMoon};
-            byte[] bossByte = Array.ConvertAll(bosses, b => b ? (byte)1 : (byte)0);
-            data.Add("Bosses", bossByte);
+                byte[] bossByte = Array.ConvertAll(bosses, b => b ? (byte)1 : (byte)0);
+                data.Add("Bosses", bossByte);
+            }
+            catch
+            {
+            }
 
             return data;
         }
