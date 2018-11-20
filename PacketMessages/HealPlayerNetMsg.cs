@@ -46,6 +46,8 @@ namespace RPG.PacketMessages
             {
                 ModPacket newPacket = mod.GetPacket();
 
+                newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write(playerId);
                 newPacket.Write(healAmount);
 

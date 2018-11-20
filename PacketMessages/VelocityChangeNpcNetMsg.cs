@@ -63,6 +63,7 @@ namespace RPG.PacketMessages
                 ModPacket newPacket = mod.GetPacket();
 
                 newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write(newVelocityX);
                 newPacket.Write(newVelocityY);
                 newPacket.Write(npcIndex);

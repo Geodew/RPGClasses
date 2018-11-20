@@ -181,6 +181,8 @@ namespace RPG.PacketMessages
             {
                 ModPacket newPacket = mod.GetPacket();
 
+                newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write(modPlayer.player.whoAmI);
                 newPacket.Write(requestPeerInfo);
 

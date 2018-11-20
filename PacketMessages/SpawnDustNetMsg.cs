@@ -122,6 +122,7 @@ namespace RPG.PacketMessages
                 ModPacket newPacket = mod.GetPacket();
 
                 newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write((int)DustMessageSubtypeEnum.POSITION);
                 newPacket.Write(dustTypeID);
                 newPacket.Write(positionX);
@@ -147,6 +148,7 @@ namespace RPG.PacketMessages
                 ModPacket newPacket = mod.GetPacket();
 
                 newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write((int)DustMessageSubtypeEnum.PROJECTILE_POSITION);
                 newPacket.Write(dustTypeID);
                 newPacket.Write(projectileId);
@@ -171,6 +173,7 @@ namespace RPG.PacketMessages
                 ModPacket newPacket = mod.GetPacket();
 
                 newPacket.Write((int)mPacketMessageType);
+
                 newPacket.Write((int)DustMessageSubtypeEnum.PLAYER_POSITION);
                 newPacket.Write(dustTypeID);
                 newPacket.Write(playerId);
