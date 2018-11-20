@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RPG.PacketMessages
@@ -81,7 +82,7 @@ namespace RPG.PacketMessages
         {
             Player player = Main.player[mPlayerId];
             MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
-            
+
             #region Class flags
             modPlayer.knight = knight;
             modPlayer.berserker = berserker;
@@ -163,6 +164,9 @@ namespace RPG.PacketMessages
             Deserialize(
                 reader,
                 whoAmI);
+            ServerBroadcast(
+                whoAmI,
+                mod);
             Process(
                 whoAmI,
                 mod);
@@ -173,7 +177,7 @@ namespace RPG.PacketMessages
                 MPlayer modPlayer,
                 bool requestPeerInfo)
         {
-            if (Main.netMode != 0)  // Not single-player
+            if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 ModPacket newPacket = mod.GetPacket();
 
@@ -310,6 +314,22 @@ namespace RPG.PacketMessages
             killedCultist = reader.ReadBoolean();
             killedMoon = reader.ReadBoolean();
             #endregion
+        }
+
+        private void ServerBroadcast(
+                int whoAmI,
+                Mod mod)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                Player player = Main.player[mPlayerId];
+                MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+
+                SerializeAndSend(
+                    mod,
+                    modPlayer,
+                    mRequestPeerInfo);
+            }
         }
     }
 }

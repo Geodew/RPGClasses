@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RPG.PacketMessages
@@ -28,6 +29,9 @@ namespace RPG.PacketMessages
             Deserialize(
                 reader,
                 whoAmI);
+            ServerBroadcast(
+                whoAmI,
+                mod);
             Process(
                 whoAmI,
                 mod);
@@ -38,7 +42,7 @@ namespace RPG.PacketMessages
                 int playerId,
                 int healAmount)
         {
-            if (Main.netMode != 0)  // Not single-player
+            if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 ModPacket newPacket = mod.GetPacket();
 
@@ -55,6 +59,19 @@ namespace RPG.PacketMessages
         {
             mPlayerId = reader.ReadInt32();
             mHealAmount = reader.ReadInt32();
+        }
+
+        private void ServerBroadcast(
+                int whoAmI,
+                Mod mod)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                SerializeAndSend(
+                    mod,
+                    mPlayerId,
+                    mHealAmount);
+            }
         }
     }
 }

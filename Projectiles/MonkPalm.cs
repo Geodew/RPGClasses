@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RPG.PacketMessages;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RPG.Projectiles
@@ -24,6 +25,7 @@ namespace RPG.Projectiles
             projectile.tileCollide = false;
             Main.projFrames[projectile.type] = 7;
         }
+
         public override void AI()
         {
             projectile.rotation = (float)System.Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X);
@@ -40,6 +42,7 @@ namespace RPG.Projectiles
                 projectile.frame++;
             }
         }
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Player p = Main.player[projectile.owner];
@@ -53,7 +56,7 @@ namespace RPG.Projectiles
                 GNPC info = target.GetGlobalNPC<GNPC>();
                 if (target.realLife != -1) { target = Main.npc[target.realLife]; }//if worm style, target head
                 target.velocity = vel;
-                if(Main.netMode != 0)
+                if(Main.netMode != NetmodeID.SinglePlayer)
                 {
                     VelocityChangeNpcNetMsg.SerializeAndSend(
                         mod,
@@ -64,11 +67,16 @@ namespace RPG.Projectiles
                 info.monkPalmOwner = projectile.owner;
             }
         }
+
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             if (target.life - damage + target.defense / 2 <= 0 && target.knockBackResist != 0)
             {
-                if (target.realLife != -1) { target = Main.npc[target.realLife]; }//if worm style, target head
+                if (target.realLife != -1)
+                {
+                    // If worm style, target head
+                    target = Main.npc[target.realLife];
+                }
                 GNPC info = target.GetGlobalNPC<GNPC>();
                 damage = 1;
                 info.killAfterKnockback = true;
@@ -78,6 +86,7 @@ namespace RPG.Projectiles
                 damage *= 2;
             }
         }
+
         public override void Kill(int timeLeft)
         {
             for (int i = 0; i < 10; i++)

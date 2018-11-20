@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using System.Collections;
+using Terraria.ID;
 
 namespace RPG.Projectiles
 {
@@ -40,10 +41,13 @@ namespace RPG.Projectiles
                         if (npcD.life <= 0)
                         {
                             npcD.life = 1;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 npcD.StrikeNPC(9999, 0f, 0, false, false);
-                                if (Main.netMode == 2) { NetMessage.SendData(28, -1, -1, null, npcD.whoAmI, 9999f, 0f, 0f); }
+                                if (Main.netMode == NetmodeID.Server)
+                                {
+                                    NetMessage.SendData(28, -1, -1, null, npcD.whoAmI, 9999f, 0f, 0f);
+                                }
                             }
                         }
                         int d = Dust.NewDust(npcD.position, npcD.width, npcD.height, 15, 0.0f, 0.0f, 0, default(Color), 3f);  // Try other types

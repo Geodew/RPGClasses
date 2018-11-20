@@ -4123,12 +4123,10 @@ namespace RPG
                     Main.dust[d].velocity.Normalize();
                     Main.dust[d].velocity *= 8;
                     Main.dust[d].velocity += player.velocity;
-                    if(Main.netMode != 0)
-                    {
-                        SandstormVisualsNetMsg.SerializeAndSend(
-                            mod,
-                            player.whoAmI);
-                    }
+
+                    SandstormVisualsNetMsg.SerializeAndSend(
+                        mod,
+                        player.whoAmI);
                 }
 
                 // Sandstorm damage
@@ -4179,16 +4177,14 @@ namespace RPG
                     int d = Dust.NewDust(player.position, player.width, player.height, 91);
                     Main.dust[d].velocity *= 7.0f * lightScale;
                     Main.dust[d].noGravity = true;
-                    if(Main.netMode != 0)
-                    {
-                        SpawnDustNetMsg.SerializeAndSendPlayer(
-                            mod,
-                            player.whoAmI,
-                            91,
-                            true,
-                            false,
-                            7.0f * lightScale);
-                    }
+
+                    SpawnDustNetMsg.SerializeAndSendPlayer(
+                        mod,
+                        player.whoAmI,
+                        91,
+                        true,
+                        false,
+                        7.0f * lightScale);
                 }
                 if (specialTimer % 15 == 0)
                 {

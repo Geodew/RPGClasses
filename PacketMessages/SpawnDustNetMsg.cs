@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RPG.PacketMessages
@@ -53,7 +54,7 @@ namespace RPG.PacketMessages
 
                 case DustMessageSubtypeEnum.INVALID:
                 default:
-                    // Shouldn't happen: unimplemented
+                    //zzz log error Shouldn't happen: unimplemented
                     return;
                     //break;  // (Unreachable)
             }
@@ -81,6 +82,9 @@ namespace RPG.PacketMessages
             Deserialize(
                 reader,
                 whoAmI);
+            ServerBroadcast(
+                whoAmI,
+                mod);
             Process(
                 whoAmI,
                 mod);
@@ -91,7 +95,7 @@ namespace RPG.PacketMessages
                 Vector2 position,
                 int dustTypeID,
                 bool modifyVelocity,
-                bool normalize,
+                bool normalizeVelocity,
                 float velocityMultiplier)
         {
             SerializeAndSendPosition(
@@ -100,7 +104,7 @@ namespace RPG.PacketMessages
                 position.Y,
                 dustTypeID,
                 modifyVelocity,
-                normalize,
+                normalizeVelocity,
                 velocityMultiplier);
         }
 
@@ -110,21 +114,24 @@ namespace RPG.PacketMessages
                 float positionY,
                 int dustTypeID,
                 bool modifyVelocity,
-                bool normalize,
+                bool normalizeVelocity,
                 float velocityMultiplier)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != NetmodeID.SinglePlayer)
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write((int)mPacketMessageType);
-            newPacket.Write((int)DustMessageSubtypeEnum.POSITION);
-            newPacket.Write(dustTypeID);
-            newPacket.Write(positionX);
-            newPacket.Write(positionY);
-            newPacket.Write(modifyVelocity);
-            newPacket.Write(normalize);
-            newPacket.Write(velocityMultiplier);
+                newPacket.Write((int)mPacketMessageType);
+                newPacket.Write((int)DustMessageSubtypeEnum.POSITION);
+                newPacket.Write(dustTypeID);
+                newPacket.Write(positionX);
+                newPacket.Write(positionY);
+                newPacket.Write(modifyVelocity);
+                newPacket.Write(normalizeVelocity);
+                newPacket.Write(velocityMultiplier);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         public static void SerializeAndSendProjectile(
@@ -132,20 +139,23 @@ namespace RPG.PacketMessages
                 int projectileId,
                 int dustTypeID,
                 bool modifyVelocity,
-                bool normalize,
+                bool normalizeVelocity,
                 float velocityMultiplier)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != NetmodeID.SinglePlayer)
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write((int)mPacketMessageType);
-            newPacket.Write((int)DustMessageSubtypeEnum.PROJECTILE_POSITION);
-            newPacket.Write(dustTypeID);
-            newPacket.Write(projectileId);
-            newPacket.Write(modifyVelocity);
-            newPacket.Write(normalize);
-            newPacket.Write(velocityMultiplier);
+                newPacket.Write((int)mPacketMessageType);
+                newPacket.Write((int)DustMessageSubtypeEnum.PROJECTILE_POSITION);
+                newPacket.Write(dustTypeID);
+                newPacket.Write(projectileId);
+                newPacket.Write(modifyVelocity);
+                newPacket.Write(normalizeVelocity);
+                newPacket.Write(velocityMultiplier);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         public static void SerializeAndSendPlayer(
@@ -153,20 +163,23 @@ namespace RPG.PacketMessages
                 int playerId,
                 int dustTypeID,
                 bool modifyVelocity,
-                bool normalize,
+                bool normalizeVelocity,
                 float velocityMultiplier)
         {
-            ModPacket newPacket = mod.GetPacket();
+            if (Main.netMode != NetmodeID.SinglePlayer)
+            {
+                ModPacket newPacket = mod.GetPacket();
 
-            newPacket.Write((int)mPacketMessageType);
-            newPacket.Write((int)DustMessageSubtypeEnum.PLAYER_POSITION);
-            newPacket.Write(dustTypeID);
-            newPacket.Write(playerId);
-            newPacket.Write(modifyVelocity);
-            newPacket.Write(normalize);
-            newPacket.Write(velocityMultiplier);
+                newPacket.Write((int)mPacketMessageType);
+                newPacket.Write((int)DustMessageSubtypeEnum.PLAYER_POSITION);
+                newPacket.Write(dustTypeID);
+                newPacket.Write(playerId);
+                newPacket.Write(modifyVelocity);
+                newPacket.Write(normalizeVelocity);
+                newPacket.Write(velocityMultiplier);
 
-            newPacket.Send();
+                newPacket.Send();
+            }
         }
 
         private void Deserialize(
@@ -209,6 +222,54 @@ namespace RPG.PacketMessages
             mModifyVelocity = reader.ReadBoolean();
             mNormalizeVelocity = reader.ReadBoolean();
             mVelocityMultiplier = reader.ReadSingle();
+        }
+
+        private void ServerBroadcast(
+                int whoAmI,
+                Mod mod)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                switch (mMessageSubtype)
+                {
+                    case DustMessageSubtypeEnum.POSITION:
+                        SerializeAndSendPosition(
+                            mod,
+                            mPositionX.Value,
+                            mPositionY.Value,
+                            mDustTypeID,
+                            mModifyVelocity,
+                            mNormalizeVelocity,
+                            mVelocityMultiplier);
+                        break;
+
+                    case DustMessageSubtypeEnum.PROJECTILE_POSITION:
+                        SerializeAndSendProjectile(
+                            mod,
+                            mProjectileId.Value,
+                            mDustTypeID,
+                            mModifyVelocity,
+                            mNormalizeVelocity,
+                            mVelocityMultiplier);
+                        break;
+
+                    case DustMessageSubtypeEnum.PLAYER_POSITION:
+                        SerializeAndSendPlayer(
+                            mod,
+                            mPlayerId.Value,
+                            mDustTypeID,
+                            mModifyVelocity,
+                            mNormalizeVelocity,
+                            mVelocityMultiplier);
+                        break;
+
+                    case DustMessageSubtypeEnum.INVALID:
+                    default:
+                        //zzz log error Shouldn't happen: unimplemented
+                        return;
+                        //break;  // (Unreachable)
+                }
+            }
         }
     }
 }

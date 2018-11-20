@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RPG.PacketMessages
@@ -31,6 +32,9 @@ namespace RPG.PacketMessages
             Deserialize(
                 reader,
                 whoAmI);
+            ServerBroadcast(
+                whoAmI,
+                mod);
             Process(
                 whoAmI,
                 mod);
@@ -54,7 +58,7 @@ namespace RPG.PacketMessages
                 float newVelocityY,
                 int npcIndex)
         {
-            if (Main.netMode != 0)  // Not single-player
+            if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 ModPacket newPacket = mod.GetPacket();
 
@@ -74,6 +78,20 @@ namespace RPG.PacketMessages
             mNewVelocityX = reader.ReadSingle();
             mNewVelocityY = reader.ReadSingle();
             mNpcIndex = reader.ReadInt32();
+        }
+
+        private void ServerBroadcast(
+                int whoAmI,
+                Mod mod)
+        {
+            if (Main.netMode == NetmodeID.Server)
+            {
+                SerializeAndSend(
+                    mod,
+                    mNewVelocityX,
+                    mNewVelocityY,
+                    mNpcIndex);
+            }
         }
     }
 }

@@ -591,45 +591,62 @@ namespace RPG
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             PacketMessageTypeEnum messageType = (PacketMessageTypeEnum)reader.ReadInt32();
-            if ((messageType == PacketMessageTypeEnum.SPAWN_DUST) && (Main.netMode != 2))
+            switch(messageType)
             {
-                SpawnDustNetMsg spawnDustNetMsg = new SpawnDustNetMsg();
-                spawnDustNetMsg.HandlePacket(
-                    reader,
-                    whoAmI,
-                    this);
-            }
-            else if (messageType == PacketMessageTypeEnum.VELOCITY_CHANGE_NPC)
-            {
-                VelocityChangeNpcNetMsg velocityChangeNpcNetMsg = new VelocityChangeNpcNetMsg();
-                velocityChangeNpcNetMsg.HandlePacket(
-                    reader,
-                    whoAmI,
-                    this);
-            }
-            else if (messageType == PacketMessageTypeEnum.SANDSTORM_VISUALS)
-            {
-                SandstormVisualsNetMsg sandstormVisualsNetMsg = new SandstormVisualsNetMsg();
-                sandstormVisualsNetMsg.HandlePacket(
-                    reader,
-                    whoAmI,
-                    this);
-            }
-            else if (messageType == PacketMessageTypeEnum.HEAL_PLAYER)
-            {
-                HealPlayerNetMsg healPlayerNetMsg = new HealPlayerNetMsg();
-                healPlayerNetMsg.HandlePacket(
-                    reader,
-                    whoAmI,
-                    this);
-            }
-            else if (messageType == PacketMessageTypeEnum.LEVEL_UP_PLAYER)
-            {
-                LevelUpPlayerNetMsg levelUpPlayerNetMsg = new LevelUpPlayerNetMsg();
-                levelUpPlayerNetMsg.HandlePacket(
-                    reader,
-                    whoAmI,
-                    this);
+                case PacketMessageTypeEnum.SPAWN_DUST:
+                    if (Main.netMode != NetmodeID.Server)
+                    {
+                        SpawnDustNetMsg spawnDustNetMsg = new SpawnDustNetMsg();
+                        spawnDustNetMsg.HandlePacket(
+                            reader,
+                            whoAmI,
+                            this);
+                    }
+                    break;
+
+                case PacketMessageTypeEnum.VELOCITY_CHANGE_NPC:
+                    VelocityChangeNpcNetMsg velocityChangeNpcNetMsg = new VelocityChangeNpcNetMsg();
+                    velocityChangeNpcNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                case PacketMessageTypeEnum.SANDSTORM_VISUALS:
+                    SandstormVisualsNetMsg sandstormVisualsNetMsg = new SandstormVisualsNetMsg();
+                    sandstormVisualsNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                case PacketMessageTypeEnum.HEAL_PLAYER:
+                    HealPlayerNetMsg healPlayerNetMsg = new HealPlayerNetMsg();
+                    healPlayerNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                case PacketMessageTypeEnum.LEVEL_UP_PLAYER:
+                    LevelUpPlayerNetMsg levelUpPlayerNetMsg = new LevelUpPlayerNetMsg();
+                    levelUpPlayerNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                case PacketMessageTypeEnum.PLAYER_CLASS_LEVEL_INFO:
+                    PlayerClassLevelInfoNetMsg playerClassLevelInfoNetMsg = new PlayerClassLevelInfoNetMsg();
+                    playerClassLevelInfoNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                default:
+                    //zzz log unhandled message
+                    break;
             }
         }
 
