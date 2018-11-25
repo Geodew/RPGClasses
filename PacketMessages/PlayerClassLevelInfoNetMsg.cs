@@ -13,9 +13,11 @@ namespace RPG.PacketMessages
         private bool mRequestPeerInfo;
         //zzz add version information so we know what classes to expect from the other person and in what order
 
+        private bool mHasClass;
+
+        #region Class flags
         // Omitting the standard `m` in front of these symbols for easy copy-paste from MPlayer.cs...
         //zzz Consider moving these bools to a struct for common use instead.
-        #region Class flags
         private bool knight;
         private bool berserker;
         private bool fortress;
@@ -82,6 +84,8 @@ namespace RPG.PacketMessages
         {
             Player player = Main.player[mPlayerId];
             MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+
+            modPlayer.hasClass = mHasClass;
 
             #region Class flags
             modPlayer.knight = knight;
@@ -186,6 +190,8 @@ namespace RPG.PacketMessages
                 newPacket.Write(modPlayer.player.whoAmI);
                 newPacket.Write(requestPeerInfo);
 
+                newPacket.Write(modPlayer.hasClass);
+
                 #region Class flags
                 newPacket.Write(modPlayer.knight);
                 newPacket.Write(modPlayer.berserker);
@@ -256,6 +262,8 @@ namespace RPG.PacketMessages
         {
             mPlayerId = reader.ReadInt32();
             mRequestPeerInfo = reader.ReadBoolean();
+
+            mHasClass = reader.ReadBoolean();
 
             #region Class flags
             knight = reader.ReadBoolean();
