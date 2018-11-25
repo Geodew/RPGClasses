@@ -3918,7 +3918,7 @@ namespace RPG
                 float angle = 360f / count;
                 for(int i=0; i<count; i++)
                 {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("CelestialStar"), 1, 2, player.whoAmI, i * angle);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType<Projectiles.CelestialStar>(), 1, 2, player.whoAmI, i * angle);
                 }
             }
             else if (celestial)
