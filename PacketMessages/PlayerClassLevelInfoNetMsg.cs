@@ -82,70 +82,73 @@ namespace RPG.PacketMessages
                 int whoAmI,
                 Mod mod)
         {
-            Player player = Main.player[mPlayerId];
-            MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            if (mPlayerId != Main.myPlayer)
+            {
+                Player player = Main.player[mPlayerId];
+                MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
 
-            modPlayer.hasClass = mHasClass;
+                modPlayer.hasClass = mHasClass;
 
-            #region Class flags
-            modPlayer.knight = knight;
-            modPlayer.berserker = berserker;
-            modPlayer.fortress = fortress;
-            modPlayer.sage = sage;
-            modPlayer.warmage = warmage;
-            modPlayer.conjuror = conjuror;
-            modPlayer.spiritMage = spiritMage;
-            modPlayer.contractedSword = contractedSword;
-            modPlayer.wanderer = wanderer;
-            modPlayer.marksman = marksman;
-            modPlayer.ranger = ranger;
-            modPlayer.arcaneSniper = arcaneSniper;
-            modPlayer.savage = savage;
-            modPlayer.ninja = ninja;
-            modPlayer.rogue = rogue;
-            modPlayer.soulbound = soulbound;
-            modPlayer.explorer = explorer;
-            modPlayer.cavalry = cavalry;
-            modPlayer.merman = merman;
-            modPlayer.werewolf = werewolf;
-            modPlayer.harpy = harpy;
-            modPlayer.angel = angel;
-            modPlayer.demon = demon;
-            modPlayer.dwarf = dwarf;
-            modPlayer.bloodKnight = bloodKnight;
-            modPlayer.taintedElf = taintedElf;
-            modPlayer.hallowMage = hallowMage;
-            modPlayer.pharaoh = pharaoh;
-            modPlayer.pirate = pirate;
-            modPlayer.jungleShaman = jungleShaman;
-            modPlayer.viking = viking;
-            modPlayer.truffle = truffle;
-            modPlayer.dragoon = dragoon;
-            modPlayer.chronomancer = chronomancer;
-            modPlayer.angler = angler;
-            modPlayer.celestial = celestial;
-            modPlayer.voidwalker = voidwalker;
-            modPlayer.moth = moth;
-            modPlayer.monk = monk;
-            modPlayer.warpKnight = warpKnight;
-            modPlayer.heritor = heritor;
-            #endregion
-            #region Killed boss flags
-            modPlayer.killedSlime = killedSlime;
-            modPlayer.killedEye = killedEye;
-            modPlayer.killedWormOrBrain = killedWormOrBrain;
-            modPlayer.killedSkelly = killedSkelly;
-            modPlayer.killedBee = killedBee;
-            modPlayer.killedWall = killedWall;
-            modPlayer.killedDestroyer = killedDestroyer;
-            modPlayer.killedTwins = killedTwins;
-            modPlayer.killedPrime = killedPrime;
-            modPlayer.killedPlant = killedPlant;
-            modPlayer.killedGolem = killedGolem;
-            modPlayer.killedFish = killedFish;
-            modPlayer.killedCultist = killedCultist;
-            modPlayer.killedMoon = killedMoon;
-            #endregion
+                #region Class flags
+                modPlayer.knight = knight;
+                modPlayer.berserker = berserker;
+                modPlayer.fortress = fortress;
+                modPlayer.sage = sage;
+                modPlayer.warmage = warmage;
+                modPlayer.conjuror = conjuror;
+                modPlayer.spiritMage = spiritMage;
+                modPlayer.contractedSword = contractedSword;
+                modPlayer.wanderer = wanderer;
+                modPlayer.marksman = marksman;
+                modPlayer.ranger = ranger;
+                modPlayer.arcaneSniper = arcaneSniper;
+                modPlayer.savage = savage;
+                modPlayer.ninja = ninja;
+                modPlayer.rogue = rogue;
+                modPlayer.soulbound = soulbound;
+                modPlayer.explorer = explorer;
+                modPlayer.cavalry = cavalry;
+                modPlayer.merman = merman;
+                modPlayer.werewolf = werewolf;
+                modPlayer.harpy = harpy;
+                modPlayer.angel = angel;
+                modPlayer.demon = demon;
+                modPlayer.dwarf = dwarf;
+                modPlayer.bloodKnight = bloodKnight;
+                modPlayer.taintedElf = taintedElf;
+                modPlayer.hallowMage = hallowMage;
+                modPlayer.pharaoh = pharaoh;
+                modPlayer.pirate = pirate;
+                modPlayer.jungleShaman = jungleShaman;
+                modPlayer.viking = viking;
+                modPlayer.truffle = truffle;
+                modPlayer.dragoon = dragoon;
+                modPlayer.chronomancer = chronomancer;
+                modPlayer.angler = angler;
+                modPlayer.celestial = celestial;
+                modPlayer.voidwalker = voidwalker;
+                modPlayer.moth = moth;
+                modPlayer.monk = monk;
+                modPlayer.warpKnight = warpKnight;
+                modPlayer.heritor = heritor;
+                #endregion
+                #region Killed boss flags
+                modPlayer.killedSlime = killedSlime;
+                modPlayer.killedEye = killedEye;
+                modPlayer.killedWormOrBrain = killedWormOrBrain;
+                modPlayer.killedSkelly = killedSkelly;
+                modPlayer.killedBee = killedBee;
+                modPlayer.killedWall = killedWall;
+                modPlayer.killedDestroyer = killedDestroyer;
+                modPlayer.killedTwins = killedTwins;
+                modPlayer.killedPrime = killedPrime;
+                modPlayer.killedPlant = killedPlant;
+                modPlayer.killedGolem = killedGolem;
+                modPlayer.killedFish = killedFish;
+                modPlayer.killedCultist = killedCultist;
+                modPlayer.killedMoon = killedMoon;
+                #endregion
+            }
 
             // If sender requested peer info, rebroadcast ours
             if (mRequestPeerInfo)
