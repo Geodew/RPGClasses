@@ -192,77 +192,78 @@ namespace RPG
             }
         }
 
-        //public override void LoadLegacy(BinaryReader reader)
-        //{
-        //    if (reader.PeekChar() == -1)
-        //    {
-        //        return;
-        //    }
-        //    try
-        //    {
-        //        hasClass = reader.ReadBoolean();
-        //        knight = reader.ReadBoolean();
-        //        berserker = reader.ReadBoolean();
-        //        fortress = reader.ReadBoolean();
-        //        sage = reader.ReadBoolean();
-        //        warmage = reader.ReadBoolean();
-        //        conjuror = reader.ReadBoolean();
-        //        spiritMage = reader.ReadBoolean();
-        //        contractedSword = reader.ReadBoolean();
-        //        wanderer = reader.ReadBoolean();
-        //        marksman = reader.ReadBoolean();
-        //        ranger = reader.ReadBoolean();
-        //        arcaneSniper = reader.ReadBoolean();
-        //        savage = reader.ReadBoolean();
-        //        ninja = reader.ReadBoolean();
-        //        //rogue = reader.ReadBoolean();
-        //        soulbound = reader.ReadBoolean();
-        //        explorer = reader.ReadBoolean();
-        //        cavalry = reader.ReadBoolean();
-        //        merman = reader.ReadBoolean();
-        //        werewolf = reader.ReadBoolean();
-        //        harpy = reader.ReadBoolean();
-        //        angel = reader.ReadBoolean();
-        //        demon = reader.ReadBoolean();
-        //        dwarf = reader.ReadBoolean();
-        //        bloodKnight = reader.ReadBoolean();
-        //        taintedElf = reader.ReadBoolean();
-        //        hallowMage = reader.ReadBoolean();
-        //        pharaoh = reader.ReadBoolean();
-        //        pirate = reader.ReadBoolean();
-        //        jungleShaman = reader.ReadBoolean();
-        //        viking = reader.ReadBoolean();
-        //        truffle = reader.ReadBoolean();
-        //        dragoon = reader.ReadBoolean();
-        //        chronomancer = reader.ReadBoolean();
-        //        angler = reader.ReadBoolean();
-        //        celestial = reader.ReadBoolean();
-        //        voidwalker = reader.ReadBoolean();
-        //        moth = reader.ReadBoolean();
-        //        monk = reader.ReadBoolean();
+        // For compatibility with old versions of tModLoader (note different input)
+        public override void LoadLegacy(BinaryReader reader)
+        {
+            if (reader.PeekChar() == -1)
+            {
+                return;
+            }
+            try
+            {
+                hasClass = reader.ReadBoolean();
+                knight = reader.ReadBoolean();
+                berserker = reader.ReadBoolean();
+                fortress = reader.ReadBoolean();
+                sage = reader.ReadBoolean();
+                warmage = reader.ReadBoolean();
+                conjuror = reader.ReadBoolean();
+                spiritMage = reader.ReadBoolean();
+                contractedSword = reader.ReadBoolean();
+                wanderer = reader.ReadBoolean();
+                marksman = reader.ReadBoolean();
+                ranger = reader.ReadBoolean();
+                arcaneSniper = reader.ReadBoolean();
+                savage = reader.ReadBoolean();
+                ninja = reader.ReadBoolean();
+                //rogue = reader.ReadBoolean();
+                soulbound = reader.ReadBoolean();
+                explorer = reader.ReadBoolean();
+                cavalry = reader.ReadBoolean();
+                merman = reader.ReadBoolean();
+                werewolf = reader.ReadBoolean();
+                harpy = reader.ReadBoolean();
+                angel = reader.ReadBoolean();
+                demon = reader.ReadBoolean();
+                dwarf = reader.ReadBoolean();
+                bloodKnight = reader.ReadBoolean();
+                taintedElf = reader.ReadBoolean();
+                hallowMage = reader.ReadBoolean();
+                pharaoh = reader.ReadBoolean();
+                pirate = reader.ReadBoolean();
+                jungleShaman = reader.ReadBoolean();
+                viking = reader.ReadBoolean();
+                truffle = reader.ReadBoolean();
+                dragoon = reader.ReadBoolean();
+                chronomancer = reader.ReadBoolean();
+                angler = reader.ReadBoolean();
+                celestial = reader.ReadBoolean();
+                voidwalker = reader.ReadBoolean();
+                moth = reader.ReadBoolean();
+                monk = reader.ReadBoolean();
 
-        //        killedEye = reader.ReadBoolean();
-        //        killedWormOrBrain = reader.ReadBoolean();
-        //        killedSkelly = reader.ReadBoolean();
-        //        killedBee = reader.ReadBoolean();
-        //        killedSlime = reader.ReadBoolean();
-        //        killedWall = reader.ReadBoolean();
-        //        killedDestroyer = reader.ReadBoolean();
-        //        killedTwins = reader.ReadBoolean();
-        //        killedPrime = reader.ReadBoolean();
-        //        killedPlant = reader.ReadBoolean();
-        //        killedGolem = reader.ReadBoolean();
-        //        killedFish = reader.ReadBoolean();
-        //        killedCultist = reader.ReadBoolean();
-        //        killedMoon = reader.ReadBoolean();
+                killedEye = reader.ReadBoolean();
+                killedWormOrBrain = reader.ReadBoolean();
+                killedSkelly = reader.ReadBoolean();
+                killedBee = reader.ReadBoolean();
+                killedSlime = reader.ReadBoolean();
+                killedWall = reader.ReadBoolean();
+                killedDestroyer = reader.ReadBoolean();
+                killedTwins = reader.ReadBoolean();
+                killedPrime = reader.ReadBoolean();
+                killedPlant = reader.ReadBoolean();
+                killedGolem = reader.ReadBoolean();
+                killedFish = reader.ReadBoolean();
+                killedCultist = reader.ReadBoolean();
+                killedMoon = reader.ReadBoolean();
 
-        //        //new classes, avoid mixed up save/load for updates by loading last
+                //new classes, avoid mixed up save/load for updates by loading last
 
-        //    }
-        //    catch
-        //    {
-        //    }
-        //}
+            }
+            catch
+            {
+            }
+        }
 
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
