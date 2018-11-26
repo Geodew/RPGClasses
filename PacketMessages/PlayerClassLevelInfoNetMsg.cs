@@ -10,7 +10,6 @@ namespace RPG.PacketMessages
         private const PacketMessageTypeEnum mPacketMessageType = PacketMessageTypeEnum.PLAYER_CLASS_LEVEL_INFO;
 
         private int mPlayerId;
-        private bool mRequestPeerInfo;
         //zzz add version information so we know what classes to expect from the other person and in what order
 
         private bool mHasClass;
@@ -85,7 +84,7 @@ namespace RPG.PacketMessages
             if (mPlayerId != Main.myPlayer)
             {
                 Player player = Main.player[mPlayerId];
-                MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+                MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
 
                 modPlayer.hasClass = mHasClass;
 
@@ -149,18 +148,6 @@ namespace RPG.PacketMessages
                 modPlayer.killedMoon = killedMoon;
                 #endregion
             }
-
-            // If sender requested peer info, rebroadcast ours
-            if (mRequestPeerInfo)
-            {
-                Player localPlayer = Main.player[Main.myPlayer];
-                MPlayer localModPlayer = (MPlayer)localPlayer.GetModPlayer(mod, "MPlayer");
-
-                SerializeAndSend(
-                    mod,
-                    localModPlayer,
-                    false);
-            }
         }
 
         public void HandlePacket(
@@ -182,7 +169,8 @@ namespace RPG.PacketMessages
         public static void SerializeAndSend(
                 Mod mod,
                 MPlayer modPlayer,
-                bool requestPeerInfo)
+                int toWho,
+                int fromWho)
         {
             if (Main.netMode != NetmodeID.SinglePlayer)
             {
@@ -191,7 +179,6 @@ namespace RPG.PacketMessages
                 newPacket.Write((int)mPacketMessageType);
 
                 newPacket.Write(modPlayer.player.whoAmI);
-                newPacket.Write(requestPeerInfo);
 
                 newPacket.Write(modPlayer.hasClass);
 
@@ -255,7 +242,7 @@ namespace RPG.PacketMessages
                 newPacket.Write(modPlayer.killedMoon);
                 #endregion
 
-                newPacket.Send();
+                newPacket.Send(toWho, fromWho);
             }
         }
 
@@ -264,7 +251,6 @@ namespace RPG.PacketMessages
                 int whoAmI)
         {
             mPlayerId = reader.ReadInt32();
-            mRequestPeerInfo = reader.ReadBoolean();
 
             mHasClass = reader.ReadBoolean();
 
@@ -336,12 +322,13 @@ namespace RPG.PacketMessages
             if (Main.netMode == NetmodeID.Server)
             {
                 Player player = Main.player[mPlayerId];
-                MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+                MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
 
                 SerializeAndSend(
                     mod,
                     modPlayer,
-                    mRequestPeerInfo);
+                    -1,
+                    mPlayerId);
             }
         }
     }
