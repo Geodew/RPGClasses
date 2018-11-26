@@ -25,6 +25,7 @@ namespace RPG
         public bool killAfterKnockback = false;
         public override bool InstancePerEntity => true;
         public override bool CloneNewInstances => true;
+
         public override void NPCLoot(NPC npc)
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
