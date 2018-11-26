@@ -269,7 +269,7 @@ namespace RPG
         {
             try
             {
-                if (newPlayer && (player.whoAmI == Main.myPlayer) && (hasClass || (specialProgressionCount > 0)))
+                if (hasClass || (specialProgressionCount > 0))
                 {
                     PlayerClassLevelInfoNetMsg.SerializeAndSend(
                         mod,
