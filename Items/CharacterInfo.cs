@@ -16,7 +16,9 @@ namespace RPG.Items
     public override void SetStaticDefaults()
     {
       DisplayName.SetDefault("Character Info Sheet");
-      Tooltip.SetDefault("Displays some information about the player. Remove all equipment for accurate measurements");
+      Tooltip.SetDefault(
+          "Displays some information about the player\n" +
+          "Includes bonuses from mods (like Class Based RPG Mod) and equipment (including equipment from mods)");
     }
 
         public override bool UseItem(Player p)
@@ -92,7 +94,7 @@ namespace RPG.Items
             Main.NewText("Max mana bonus: " + (p.statManaMax2 - p.statManaMax));
             Main.NewText("Mana regen bonus: " + (p.manaRegenBonus));
             Main.NewText("Defense bonus: " + p.statDefense);
-            Main.NewText("Melee speed bonus: " + (100.0f / (p.meleeSpeed - 1.0f)) + "%");
+            Main.NewText("Melee speed bonus: " + (100.0f * (1.0f / p.meleeSpeed - 1.0f)) + "%");
             Main.NewText("Move speed bonus: " + ((p.moveSpeed - 1.0f) * 100.0f) + "%");
             Main.NewText("Armor penetration bonus: " + (p.armorPenetration));
             Main.NewText("Fishing skill bonus: " + (p.fishingSkill));
