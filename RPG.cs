@@ -402,13 +402,14 @@ namespace RPG
                         }
                         if(player.statLife < mplayer.special)
                         {
-                            player.HealEffect(mplayer.special - player.statLife);
-                            var netMessage = GetPacket();
-                            netMessage.Write("Heal");
-                            netMessage.Write(player.whoAmI);
-                            netMessage.Write(player.statLife = mplayer.special);
-                            netMessage.Send();
+                            int healAmount = mplayer.special - player.statLife;
+                            player.HealEffect(healAmount);
                             player.statLife = mplayer.special;
+
+                            PacketMessages.HealPlayerNetMsg.SerializeAndSend(
+                                this,
+                                player.whoAmI,
+                                healAmount);
                         }
                         proj.Kill();
                     }
