@@ -14,7 +14,7 @@ namespace RPG.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
             float scalar = 1 + mplayer.specialProgressionCount / 7f;
             player.meleeDamage += .18f * scalar;
         }

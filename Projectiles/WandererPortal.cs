@@ -30,7 +30,7 @@ namespace RPG.Projectiles
         public override void Kill(int timeLeft)
         {
             Player player = Main.player[projectile.owner];
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
             mplayer.special--;
             for (int i = 0; i < 10; i++)
             {

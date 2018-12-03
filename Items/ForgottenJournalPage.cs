@@ -21,7 +21,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player p)
         {
-            MPlayer mplayer = (MPlayer)(p.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
             if (NPC.downedBoss1 && !mplayer.killedEye)
             {
                 mplayer.killedEye = true;
@@ -97,7 +97,7 @@ namespace RPG.Items
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("BlankContract"));
+            recipe.AddIngredient(mod.ItemType<BlankContract>());
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

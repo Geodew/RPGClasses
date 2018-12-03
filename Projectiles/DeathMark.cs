@@ -28,7 +28,7 @@ namespace RPG.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             GNPC info = target.GetGlobalNPC<GNPC>();
-            target.AddBuff(mod.BuffType("DeathMark"), 180);
+            target.AddBuff(mod.BuffType<Buffs.DeathMark>(), 180);
             info.deathMarkOwner = projectile.owner;
         }
     }

@@ -25,7 +25,7 @@ namespace RPG.Projectiles
         public override void AI()
         { 
             Player p = Main.player[projectile.owner];
-            MPlayer mplayer = (MPlayer)(p.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
             if (p.dead || mplayer.special3 == 0)
             {
                 projectile.Kill();
@@ -78,7 +78,7 @@ namespace RPG.Projectiles
                 {
                     float x2 = projectile.position.X + 4f - adj.X / 10f * num136 * 4f;
                     float y2 = projectile.position.Y + 4f - adj.Y / 10f * num136 * 4f;
-                    int num137 = Dust.NewDust(new Vector2(x2, y2), 1, 1, mod.DustType("CelestialDust"), 0f, 0f, 0, default(Color), .7f);
+                    int num137 = Dust.NewDust(new Vector2(x2, y2), 1, 1, mod.DustType<Dusts.CelestialDust>(), 0f, 0f, 0, default(Color), .7f);
                     Main.dust[num137].alpha = projectile.alpha;
                     Main.dust[num137].position.X = x2;
                     Main.dust[num137].position.Y = y2;

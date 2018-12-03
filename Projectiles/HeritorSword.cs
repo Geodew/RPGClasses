@@ -25,7 +25,7 @@ namespace RPG.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
             if (player.dead || !player.active)
             {
                 projectile.Kill();
@@ -167,7 +167,7 @@ namespace RPG.Projectiles
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             Player player = Main.player[projectile.owner];
-            MPlayer mPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            MPlayer mPlayer = player.GetModPlayer<MPlayer>(mod);
             float scalar = 1f + (float)Math.Pow(mPlayer.specialProgressionCount, 1.75) / 6;
             damage = (int)(14 * scalar);
         }

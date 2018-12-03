@@ -12,6 +12,7 @@ namespace RPG.Dusts
             dust.noLight = true;
             dust.scale = 1.3f;
         }
+
         public override bool Update(Dust dust)
         {
             dust.scale -= .04f;
@@ -21,6 +22,7 @@ namespace RPG.Dusts
             }
             return false;
         }
+
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {
             return new Color(lightColor.R, lightColor.G, lightColor.B, 75);

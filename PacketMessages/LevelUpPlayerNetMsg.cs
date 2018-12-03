@@ -43,7 +43,7 @@ namespace RPG.PacketMessages
                 Mod mod)
         {
             Player player = Main.player[mPlayerId];
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
             bool leveledUp = false;
 
             switch (mBossKilled)

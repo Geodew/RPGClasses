@@ -20,7 +20,7 @@ namespace RPG.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             GNPC info = target.GetGlobalNPC<GNPC>();
-            target.AddBuff(mod.BuffType("Chum"), 120);
+            target.AddBuff(mod.BuffType<Buffs.Chum>(), 120);
             info.chumOwner = projectile.owner;
         }
     }

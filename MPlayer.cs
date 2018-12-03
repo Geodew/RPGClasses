@@ -2287,7 +2287,7 @@ namespace RPG
             }
             #endregion
             #region dwarf
-            else if (dwarf && (player.position.Y > Main.rockLayer * 16 && player.position.Y < (Main.maxTilesY - 200)*16 || player.FindBuffIndex(mod.BuffType("DwarvenStout"))>=0))//cavern layer, no higher and not in hell
+            else if (dwarf && (player.position.Y > Main.rockLayer * 16 && player.position.Y < (Main.maxTilesY - 200)*16 || player.FindBuffIndex(mod.BuffType<Buffs.DwarvenStout>())>=0))//cavern layer, no higher and not in hell
             {
                 player.meleeDamage += .05f;
                 player.thrownDamage += .05f;
@@ -3898,7 +3898,7 @@ namespace RPG
                 {
                     float adjX = 12 * (special3 % 4);
                     float adjY = 12 * (special3 / 4);
-                    int p = Projectile.NewProjectile(player.Center.X - 30 + adjX, player.position.Y - 16 - adjY, 0, 0, mod.ProjectileType("WandererCharge"), 0, 0, player.whoAmI);
+                    int p = Projectile.NewProjectile(player.Center.X - 30 + adjX, player.position.Y - 16 - adjY, 0, 0, mod.ProjectileType<Projectiles.WandererCharge>(), 0, 0, player.whoAmI);
                     Main.projectile[p].localAI[0] = Main.projectile[p].position.X - player.position.X;
                     Main.projectile[p].localAI[1] = Main.projectile[p].position.Y - player.position.Y;
                     special3++;
@@ -3968,7 +3968,7 @@ namespace RPG
                         Main.projectile[p].localAI[1] = 1;
                     }
                     player.statManaMax -= 20;
-                    player.AddBuff(mod.BuffType("ActiveCooldown"), 600);
+                    player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 600);
                     special = 0;
                 }
             }
@@ -4014,7 +4014,7 @@ namespace RPG
                         float scalar = 1 + specialProgressionCount / 7;
                         float vel = charge * scalar * (1+player.jumpSpeedBoost) / 10;
                         player.velocity.Y = -vel;
-                        player.AddBuff(mod.BuffType("ActiveCooldown"), 180);
+                        player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 180);
                     }
                 }
             }
@@ -4050,11 +4050,11 @@ namespace RPG
                 player.forceWerewolf = true;
                 player.AddBuff(BuffID.Werewolf, 2);
             }
-            else if (werewolf && player.FindBuffIndex(mod.BuffType("ActiveCooldown"))>=0)
+            else if (werewolf && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>())>=0)
             {
                 player.meleeDamage -= .1f;
             }
-            else if(fortress && player.FindBuffIndex(mod.BuffType("ActiveCooldown")) >= 0 && player.FindBuffIndex(BuffID.Stoned) == -1 && special>0)
+            else if(fortress && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>()) >= 0 && player.FindBuffIndex(BuffID.Stoned) == -1 && special>0)
             {
                 special2 = special;
                 specialTimer = 360;
@@ -4092,7 +4092,7 @@ namespace RPG
                     float X = Main.rand.Next(16, 25) * (flag1 ? -1 : 1);
                     flag1 = Main.rand.Next(0, 2) == 0;
                     float Y = Main.rand.Next(16, 25) * (flag1 ? -1 : 1);
-                    int p = Projectile.NewProjectile(player.Center.X + X, player.Center.Y + Y, 0, 0, mod.ProjectileType("Demon"), damage, 2, player.whoAmI, X, Y);
+                    int p = Projectile.NewProjectile(player.Center.X + X, player.Center.Y + Y, 0, 0, mod.ProjectileType<Projectiles.Demon>(), damage, 2, player.whoAmI, X, Y);
                     specialTimer = time;
                     Projectile projectile = Main.projectile[p];
                     for (int i = 0; i < 10; i++)
@@ -4203,7 +4203,7 @@ namespace RPG
                 special3--;
                 int numWeps = 4;//2 + specialProgressionCount / 3;
                 //cycle projectiles
-                if(special3%30 == 29)
+                if((special3 % 30) == 29)
                 {
                     //check if next weapon is available
                     special4++;
@@ -4214,23 +4214,24 @@ namespace RPG
                     //spawn special4 with AI = -1
                     if (special4 == 1)
                     {
-                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("HeritorDagger"), 1, 2, player.whoAmI, -1);
+                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType<Projectiles.HeritorDagger>(), 1, 2, player.whoAmI, -1);
                     }
                     else if (special4 == 2)
                     {
-                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("HeritorSword"), 1, 2, player.whoAmI, -1);
+                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType<Projectiles.HeritorSword>(), 1, 2, player.whoAmI, -1);
                     }
                     else if (special4 == 3)
                     {
-                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("HeritorSpear"), 1, 2, player.whoAmI, -1);
+                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType<Projectiles.HeritorSpear>(), 1, 2, player.whoAmI, -1);
                     }
                     else if (special4 == 4)
                     {
-                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("HeritorGun"), 1, 2, player.whoAmI, -1);
+                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType<Projectiles.HeritorGun>(), 1, 2, player.whoAmI, -1);
                     }
                     else if (special4 == 5)
                     {
-                        int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType("HeritorTome"), 1, 2, player.whoAmI, -1);
+                        // Not Yet Implemented
+                        //int p = Projectile.NewProjectile(player.position, Vector2.Zero, mod.ProjectileType<Projectiles.HeritorTome>(), 1, 2, player.whoAmI, -1);
                     }
                     else if (special4 == 6)
                     {
@@ -4499,7 +4500,7 @@ namespace RPG
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (fortress && player.FindBuffIndex(mod.BuffType("ActiveCooldown"))>=0 && player.FindBuffIndex(BuffID.Stoned)>=0)
+            if (fortress && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>())>=0 && player.FindBuffIndex(BuffID.Stoned)>=0)
             {
                 special += damage;
                 damage = (int)(damage * .1);
@@ -4529,7 +4530,7 @@ namespace RPG
             {
                 specialTimer = 0;
                 special = 0;
-                player.AddBuff(mod.BuffType("ActiveCooldown"), 900);
+                player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 900);
             }
 
             base.Hurt(pvp, quiet, damage, hitDirection, crit);
@@ -4541,14 +4542,16 @@ namespace RPG
             {
                 return;
             }
+
             Item i = new Item();
-            i.SetDefaults(mod.ItemType("BlankContract"));
-            items.Add(i);
-            i = new Item();
-            i.SetDefaults(mod.ItemType("CharacterInfo"));
+            i.SetDefaults(mod.ItemType<Items.BlankContract>());
             items.Add(i);
 
-            base.SetupStartInventory(items, mediumcoreDeath);  //zzz missing this? See other functions in this file too
+            i = new Item();
+            i.SetDefaults(mod.ItemType<Items.CharacterInfo>());
+            items.Add(i);
+
+            base.SetupStartInventory(items, mediumcoreDeath);
         }
 
         public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -4583,7 +4586,7 @@ namespace RPG
                 for(int i=0; i<1000; i++)
                 {
                     Projectile proj = Main.projectile[i];
-                    if (proj.type == mod.ProjectileType("WandererPortal"))
+                    if (proj.type == mod.ProjectileType<Projectiles.WandererPortal>())
                     {
                         Vector2 vel = Main.MouseWorld - proj.Center;
                         vel.Normalize();
@@ -4800,7 +4803,7 @@ namespace RPG
                     {
                         int offsetX = player.direction * Main.rand.Next(24, 36);
                         int offsetY = Main.rand.Next(-20, 21);
-                        int p = Projectile.NewProjectile(player.Center.X - offsetX, player.Center.Y + offsetY, 0f, 0f, mod.ProjectileType("MothPoison"), dam, 0f, player.whoAmI, Main.rand.Next(6));
+                        int p = Projectile.NewProjectile(player.Center.X - offsetX, player.Center.Y + offsetY, 0f, 0f, mod.ProjectileType<Projectiles.MothPoison>(), dam, 0f, player.whoAmI, Main.rand.Next(6));
                         Main.projectile[p].scale = .2f + Main.rand.NextFloat() / 2f;
                     }
                     special3--;

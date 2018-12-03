@@ -12,7 +12,7 @@ namespace RPG.Projectiles
             if (projectile.minion)
             {
                 Player player = Main.player[projectile.owner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 if (mplayer.soulbound && projectile.type != ProjectileID.StardustGuardian)
                 {
                     projectile.extraUpdates = 0;
@@ -45,7 +45,7 @@ namespace RPG.Projectiles
             if(projectile.type == ProjectileID.FrostHydra)
             {
                 Player player = Main.player[projectile.owner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 if (mplayer.soulbound)
                 {
                     projectile.damage = (100 * mplayer.special3);
@@ -54,7 +54,7 @@ namespace RPG.Projectiles
             else if (projectile.type == ProjectileID.RainbowCrystal)
             {
                 Player player = Main.player[projectile.owner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 if (mplayer.soulbound)
                 {
                     projectile.damage = (150 * mplayer.special3);
@@ -63,7 +63,7 @@ namespace RPG.Projectiles
             else if (projectile.type == 641)
             {
                 Player player = Main.player[projectile.owner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 if (mplayer.soulbound)
                 {
                     projectile.damage = (50 * mplayer.special3);
@@ -72,7 +72,7 @@ namespace RPG.Projectiles
             else if(projectile.type == 377)
             {
                 Player player = Main.player[projectile.owner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 if (mplayer.soulbound)
                 {
                     projectile.damage = (21 * mplayer.special3);

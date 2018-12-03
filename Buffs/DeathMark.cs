@@ -19,7 +19,7 @@ namespace RPG.Buffs
             {
                 GNPC info = npc.GetGlobalNPC<GNPC>();
                 Player player = Main.player[info.deathMarkOwner];
-                MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
                 int damage = 5 + (int)(info.deathMarkDamage * (.35 + .01*mplayer.specialProgressionCount));
                 damage += npc.defense / 2;
                 npc.StrikeNPC(damage, 0, 0, true);

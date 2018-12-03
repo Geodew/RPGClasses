@@ -32,7 +32,7 @@ namespace RPG
             if (info.deathMarkOwner >= 0)
             {
                 Player player = Main.player[info.deathMarkOwner];
-                int index = player.FindBuffIndex(mod.BuffType("ActiveCooldown"));
+                int index = player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>());
                 player.buffTime[index] = 1;
             }
             if (!npc.boss)
@@ -44,7 +44,7 @@ namespace RPG
                 if (Main.player[i].active)
                 {
                     Player p = Main.player[i];
-                    MPlayer player = (MPlayer)(p.GetModPlayer(mod, "MPlayer"));
+                    MPlayer player = p.GetModPlayer<MPlayer>(mod);
                     bool leveledUp = false;
                     BossGroupEnum msgType = BossGroupEnum.INVALID;
 
@@ -149,7 +149,7 @@ namespace RPG
         public override bool StrikeNPC(NPC npc, ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
-            if (npc.FindBuffIndex(mod.BuffType("DeathMark")) >= 0)
+            if (npc.FindBuffIndex(mod.BuffType<Buffs.DeathMark>()) >= 0)
             {
                 info.deathMarkDamage += (int)damage;
                 if (crit)
@@ -157,10 +157,12 @@ namespace RPG
                     info.deathMarkDamage += (int)damage;
                 }
             }
+
             if (info.savageBloodTime > 0)
             {
                 damage *= 1.1;
             }
+
             return base.StrikeNPC(npc, ref damage, defense, ref knockback, hitDirection, ref crit);
         }
 
@@ -200,7 +202,7 @@ namespace RPG
         {
             if (npc.type == NPCID.BloodCrawler || npc.type == NPCID.BloodCrawlerWall || npc.type == NPCID.FaceMonster || npc.type == NPCID.Crimera || npc.type == NPCID.BigCrimera || npc.type == NPCID.LittleCrimera)
             {
-                MPlayer player = (MPlayer)(target.GetModPlayer(mod, "MPlayer"));
+                MPlayer player = target.GetModPlayer<MPlayer>(mod);
                 if(player.bloodKnight && player.killedWormOrBrain)
                 {
                     return false;
@@ -208,7 +210,7 @@ namespace RPG
             }
             if(npc.type==NPCID.EaterofSouls || npc.type == NPCID.LittleEater || npc.type == NPCID.BigEater || npc.type == NPCID.DevourerBody || npc.type == NPCID.DevourerHead || npc.type == NPCID.DevourerTail)
             {
-                MPlayer player = (MPlayer)(target.GetModPlayer(mod, "MPlayer"));
+                MPlayer player = target.GetModPlayer<MPlayer>(mod);
                 if (player.taintedElf && player.killedWormOrBrain)
                 {
                     return false;
@@ -247,7 +249,7 @@ namespace RPG
 
         public override bool PreAI(NPC npc)
         {
-            if (npc.FindBuffIndex(mod.BuffType("MonkPalm"))>= 0)
+            if (npc.FindBuffIndex(mod.BuffType<Buffs.MonkPalm>())>= 0)
             {
                 return false;
             }

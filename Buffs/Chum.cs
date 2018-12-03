@@ -12,6 +12,7 @@ namespace RPG.Buffs
             DisplayName.SetDefault("Chum");
             Main.buffNoSave[Type] = false;
         }
+
         public override void Update(NPC npc, ref int buffIndex)
         {
             Vector2 spawnPos = new Vector2(npc.Center.X - 16, npc.Center.Y + 32 + npc.height / 2);
@@ -19,8 +20,8 @@ namespace RPG.Buffs
             if (npc.buffTime[buffIndex] == 1)
             {
                 GNPC info = npc.GetGlobalNPC<GNPC>();
-                int p = Projectile.NewProjectile(spawnPos.X + 16, spawnPos.Y, 0, -6, mod.ProjectileType("AnglerShark"), 1, 0, info.chumOwner);
-                for(int i= 0; i<60; i++)
+                int p = Projectile.NewProjectile(spawnPos.X + 16, spawnPos.Y, 0, -6, mod.ProjectileType<Projectiles.AnglerShark>(), 1, 0, info.chumOwner);
+                for(int i = 0; i < 60; i++)
                 {
                     int d = Dust.NewDust(spawnPos, 32, 12, 103);
                     Dust dst = Main.dust[d];

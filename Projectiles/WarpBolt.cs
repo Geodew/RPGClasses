@@ -28,7 +28,7 @@ namespace RPG.Projectiles
             NetMessage.SendData(65, -1, -1, null, 0, (float)player.whoAmI, projectile.position.X, projectile.position.Y, 1, 0, 0);
             player.immune = true;
             player.immuneTime = 60;
-            player.AddBuff(mod.BuffType("WarpStrength"), 180);
+            player.AddBuff(mod.BuffType<Buffs.WarpStrength>(), 180);
             projectile.timeLeft = -2;
         }
         public override void Kill(int timeLeft)

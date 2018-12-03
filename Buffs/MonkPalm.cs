@@ -20,14 +20,14 @@ namespace RPG.Buffs
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
             Player player = Main.player[info.monkPalmOwner];
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
             for(int i=0; i<200; i++)
             {
                 NPC target = Main.npc[i];
                 if (!target.Equals(npc))
                 {
                     Rectangle targetRect = target.getRect();
-                    if (targetRect.Intersects(npc.getRect()) && target.FindBuffIndex(mod.BuffType("ActiveCooldown")) == -1)
+                    if (targetRect.Intersects(npc.getRect()) && target.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>()) == -1)
                     {
                         float scalar = 1.0f + (float)Math.Pow(mplayer.specialProgressionCount, 1.7) / 6.0f;
                         float damage = (20.0f * scalar * player.meleeDamage + npc.damage) * Main.rand.Next(90,111)/100f;
@@ -38,7 +38,7 @@ namespace RPG.Buffs
                         {
                             NetMessage.SendData(28, -1, -1, null, target.whoAmI, damage, 12, dir, crit ? 1 : 0);
                         }
-                        target.AddBuff(mod.BuffType("ActiveCooldown"), 60);
+                        target.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 60);
                     }
                 }
             }

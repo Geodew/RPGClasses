@@ -19,7 +19,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player player)
         {
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
             mplayer.hasClass = false;
             mplayer.knight = false;
             mplayer.berserker = false;
@@ -60,14 +60,14 @@ namespace RPG.Items
             mplayer.moth = false;
             mplayer.monk = false;
             if (player.whoAmI == Main.myPlayer)
-                player.QuickSpawnItem(mod.ItemType("BlankContract"));
+                player.QuickSpawnItem(mod.ItemType<BlankContract>());
             return true;
         }
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("BlankContract"));
+            recipe.AddIngredient(mod.ItemType<BlankContract>());
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

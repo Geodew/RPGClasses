@@ -22,10 +22,11 @@ namespace RPG.Projectiles
             projectile.netImportant = true;
             target = null;
         }
+
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
             if (player.dead || !player.active)
             {
                 projectile.Kill();
@@ -125,11 +126,13 @@ namespace RPG.Projectiles
                 }
             }
         }
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             projectile.velocity *= -1;
             projectile.ai[1] = 12;
         }
+
         public override bool? CanHitNPC(NPC target)
         {
             if (projectile.ai[0] == -1)
@@ -138,13 +141,15 @@ namespace RPG.Projectiles
             }
             return base.CanHitNPC(target);
         }
+
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             Player player = Main.player[projectile.owner];
-            MPlayer mPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            MPlayer mPlayer = player.GetModPlayer<MPlayer>(mod);
             float scalar = 1f + (float)Math.Pow(mPlayer.specialProgressionCount, 1.75) / 6;
             damage = (int)(11 * scalar);
         }
+
         private NPC getTarget()
         {
             float lowestD = 1100;

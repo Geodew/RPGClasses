@@ -23,7 +23,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player p)
         {
-            MPlayer mplayer = (MPlayer)(p.GetModPlayer(mod, "MPlayer"));
+            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
             Main.NewText("Level " + (mplayer.specialProgressionCount + 1));  // Some classes will exceed 15
             string killedBosses = "";
             if (mplayer.killedEye) { killedBosses += "Eye of Cthulu, "; }
@@ -105,7 +105,7 @@ namespace RPG.Items
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("BlankContract"));
+            recipe.AddIngredient(mod.ItemType<BlankContract>());
             recipe.SetResult(this);
             recipe.AddRecipe();
             recipe = new ModRecipe(mod);

@@ -10,6 +10,8 @@ namespace RPG
 {
     public class RPG : Mod
     {
+        private const string ActiveAbilityHotkeyName = "Active Ability";
+
         public RPG()
         {
             Properties = new ModProperties()
@@ -23,56 +25,57 @@ namespace RPG
 
         public override void Load()
         {
-            RegisterHotKey("Active Ability", "Q");
+            RegisterHotKey(ActiveAbilityHotkeyName, "Q");
         }
 
         public override void HotKeyPressed(string name)
         {
             Player player = Main.player[Main.myPlayer];
-            MPlayer mplayer = (MPlayer)(player.GetModPlayer(this, "MPlayer"));
-            if (name.Equals("Active Ability") && (player.FindBuffIndex(BuffType("ActiveCooldown")) == -1))
+            MPlayer mplayer = player.GetModPlayer<MPlayer>(this);
+            if (name.Equals(ActiveAbilityHotkeyName) && (player.FindBuffIndex(BuffType<Buffs.ActiveCooldown>()) == -1))
             {
                 if (mplayer.knight)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 600);
                     int damage = 6;
                     int count = mplayer.specialProgressionCount;
-                    string type = "Shield1";
+                    int type;
                     if (count <= 5)
                     {
                         damage += 2 * count;
+                        type = ProjectileType<Projectiles.Shield1>();
                     }
                     else if (count <= 9)
                     {
                         damage += 3 * count;
-                        type = "Shield2";
+                        type = ProjectileType<Projectiles.Shield2>();
                     }
                     else if (count <= 12)
                     {
                         damage += 5 * count;
-                        type = "Shield3";
+                        type = ProjectileType<Projectiles.Shield3>();
                     }
                     else
                     {
                         damage += 7 * count;
-                        type = "Shield3";
+                        type = ProjectileType<Projectiles.Shield3>();
                     }
                     float num11 = damage * player.meleeDamage + player.statDefense;
-                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0, 0, ProjectileType(type), (int)num11, 10, player.whoAmI);
+                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0, 0, type, (int)num11, 10, player.whoAmI);
                 }
                 else if (mplayer.fortress)
                 {
                     player.AddBuff(BuffID.Stoned, 240);
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                 }
                 else if (mplayer.warmage)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     mplayer.specialTimer = 600;
                 }
                 else if (mplayer.harpy)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 240);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 240);
                     Main.PlaySound(2, player.position, 32);
                     int damage = 11;
                     int count = mplayer.specialProgressionCount;
@@ -92,7 +95,7 @@ namespace RPG
                 }
                 else if (mplayer.spiritMage)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     int minionsKilled = 0;
                     for(int i=0; i<1000; i++)
                     {
@@ -121,10 +124,10 @@ namespace RPG
                 }
                 else if (mplayer.demon)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 20);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 20);
                     for(int i=0; i<1000; i++)
                     {
-                        if(Main.projectile[i].type == ProjectileType("Demon") && Main.projectile[i].owner == Main.myPlayer && !Main.projectile[i].tileCollide && Main.projectile[i].active)
+                        if(Main.projectile[i].type == ProjectileType<Projectiles.Demon>() && Main.projectile[i].owner == Main.myPlayer && !Main.projectile[i].tileCollide && Main.projectile[i].active)
                         {
                             Vector2 vel = Main.MouseWorld - Main.projectile[i].position;
                             vel.Normalize();
@@ -140,7 +143,7 @@ namespace RPG
                 }
                 else if (mplayer.werewolf)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 10800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 10800);
                     Main.PlaySound(3, player.position, 6);
                     mplayer.specialTimer = 3600;
                 }
@@ -180,7 +183,7 @@ namespace RPG
                 }
                 else if (mplayer.soulbound)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1500);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1500);
                     mplayer.specialTimer = 600;
                     if (Main.expertMode)
                     {
@@ -193,16 +196,16 @@ namespace RPG
                 }
                 else if (mplayer.ninja)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 900);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 900);
                     Vector2 vel = Main.MouseWorld - player.Center;
                     vel.Normalize();
                     vel *= 11;
-                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, vel.X, vel.Y, ProjectileType("DeathMark"), 1, 0, player.whoAmI);
+                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, vel.X, vel.Y, ProjectileType<Projectiles.DeathMark>(), 1, 0, player.whoAmI);
                     Main.PlaySound(2, player.position, 19);
                 }
                 else if (mplayer.merman)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 3600*8);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600*8);
                     Main.raining = true;
                     Main.cloudBGActive = 1;
                     Main.cloudBGAlpha = 255;
@@ -213,14 +216,14 @@ namespace RPG
                 {
                     mplayer.specialTimer = 60;
                     player.velocity.X += (14 + mplayer.specialProgressionCount) * player.direction;
-                    player.AddBuff(BuffType("ActiveCooldown"), 600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 600);
                 }
                 else if (mplayer.pirate)
                 {
                     bool flag = (player.position.X < 850 * 16 || player.position.X > (Main.maxTilesX - 850) * 16) && player.position.Y < Main.worldSurface * 16;
                     if (flag)
                     {
-                        player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                        player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                         int damage = 30;
                         int count = mplayer.specialProgressionCount;
                         float scalar = 1f + (float)Math.Pow(count, 1.65) / 6;
@@ -237,14 +240,14 @@ namespace RPG
                     }
                     else
                     {
-                        player.AddBuff(BuffType("ActiveCooldown"), 18000);
-                        player.AddBuff(BuffType("RumDrunk"), 7200);
+                        player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 18000);
+                        player.AddBuff(BuffType<Buffs.RumDrunk>(), 7200);
                         Main.PlaySound(2, player.position, 3);
                     }
                 }
                 else if (mplayer.pharaoh)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 14400);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 14400);
                     mplayer.specialTimer = 1800;
                     if (player.ZoneDesert || player.ZoneUndergroundDesert)
                     {
@@ -253,28 +256,28 @@ namespace RPG
                 }
                 else if (mplayer.arcaneSniper)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     mplayer.specialTimer = 600;
                     mplayer.special2 = 1 + mplayer.specialProgressionCount / 4;  // Number of empowered shots
                 }
                 else if (mplayer.hallowMage)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     mplayer.specialTimer = 25 + mplayer.specialProgressionCount * 8;
                 }
                 else if (mplayer.explorer)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     player.TeleportationPotion();
                 }
                 else if (mplayer.taintedElf)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     mplayer.specialTimer = 600;
                 }
                 else if (mplayer.bloodKnight)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 3600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600);
                     WorldGen.Convert((int)(player.position.X + (float)(player.width / 2)) / 16, (int)(player.position.Y + (float)(player.height / 2)) / 16, 4, 30);
                     int damage = 25;
                     int count = mplayer.specialProgressionCount;
@@ -304,12 +307,12 @@ namespace RPG
                     {
                         return;
                     }
-                    player.AddBuff(BuffType("ActiveCooldown"), 60);
-                    int p = Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType("WandererPortal"), 0, 0, Main.myPlayer);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 60);
+                    int p = Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType<Projectiles.WandererPortal>(), 0, 0, Main.myPlayer);
                     mplayer.special++;
                     for (int i = 0; i < 1000; i++)
                     {
-                        if (Main.projectile[i].type == ProjectileType("WandererCharge") && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].ai[1] == mplayer.special3)
+                        if (Main.projectile[i].type == ProjectileType<Projectiles.WandererCharge>() && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].ai[1] == mplayer.special3)
                         {
                             Main.projectile[i].Kill();
                             break;
@@ -318,29 +321,29 @@ namespace RPG
                 }
                 else if (mplayer.angel)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 7200);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 7200);
                     mplayer.specialTimer = 600;
                 }
                 else if (mplayer.marksman)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 5400);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 5400);
                     mplayer.specialTimer = 600;
                     player.AddBuff(BuffID.NightOwl, 600);
                 }
                 else if (mplayer.ranger)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 3600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600);
                     mplayer.specialTimer = 300;
                 }
                 else if (mplayer.dwarf)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 3600 * 6);
-                    player.AddBuff(BuffType("DwarvenStout"), 7200);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600 * 6);
+                    player.AddBuff(BuffType<Buffs.DwarvenStout>(), 7200);
                     Main.PlaySound(2, player.position, 3);
                 }
                 else if (mplayer.savage)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 7200);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 7200);
                     mplayer.specialTimer = 900;
                     if (Main.expertMode)
                     {
@@ -354,7 +357,7 @@ namespace RPG
                 }
                 else if (mplayer.berserker)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 7200);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 7200);
                     player.AddBuff(BuffID.Battle, 1200);
                     mplayer.specialTimer = 1200;
                 }
@@ -362,15 +365,15 @@ namespace RPG
                 {
                     if (mplayer.specialTimer <= 0)
                     {
-                        player.AddBuff(BuffType("ActiveCooldown"), 120);
+                        player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 120);
                         mplayer.specialTimer = 600;
-                        int p = Projectile.NewProjectile(player.position.X, player.position.Y, 0, 0, ProjectileType("ChronoGhost"), 0, 0, player.whoAmI);
+                        int p = Projectile.NewProjectile(player.position.X, player.position.Y, 0, 0, ProjectileType<Projectiles.ChronoGhost>(), 0, 0, player.whoAmI);
                         mplayer.special2 = p;
                         mplayer.special = player.statLife;
                     }
                     else
                     {
-                        player.AddBuff(BuffType("ActiveCooldown"), 3600);
+                        player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600);
                         Projectile proj = Main.projectile[mplayer.special2];
                         player.Teleport(proj.position);
                         float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.7) / 4;
@@ -412,25 +415,25 @@ namespace RPG
                 }
                 else if (mplayer.contractedSword)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 7;
                     float damage = 18 * scalar * (player.meleeDamage + player.minionDamage -1.5f);
-                    Projectile.NewProjectile(player.position.X, player.position.Y, 8 * player.direction, 0, ProjectileType("SpiritKnight"), (int)damage, 10, player.whoAmI);
+                    Projectile.NewProjectile(player.position.X, player.position.Y, 8 * player.direction, 0, ProjectileType<Projectiles.SpiritKnight>(), (int)damage, 10, player.whoAmI);
                 }
                 else if (mplayer.angler)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                     Vector2 vel = Main.MouseWorld - player.Center;
                     vel.Normalize();
                     vel *= 9;
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, vel.X, vel.Y, ProjectileType("AnglerChum"), 1, 0, player.whoAmI);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, vel.X, vel.Y, ProjectileType<Projectiles.AnglerChum>(), 1, 0, player.whoAmI);
                 }
                 else if (mplayer.conjuror)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 600);
                     float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 6;
                     float damage = 3 * scalar * (player.minionDamage);
-                    Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType("ConjurorCrystal"), (int)damage, 0, player.whoAmI);
+                    Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType<Projectiles.ConjurorCrystal>(), (int)damage, 0, player.whoAmI);
                 }
                 else if (mplayer.celestial)
                 {
@@ -442,7 +445,7 @@ namespace RPG
                     {
                         mplayer.special = 0;
                     }
-                    player.AddBuff(BuffType("ActiveCooldown"), 180);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 180);
                 }
                 else if (mplayer.voidwalker)
                 {
@@ -486,7 +489,7 @@ namespace RPG
                     player.statMana -= cost;
                     player.manaRegenDelay = 90;
                     mplayer.special2++;
-                    player.AddBuff(BuffType("ActiveCooldown"), 480 - mplayer.specialProgressionCount * 30);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 480 - mplayer.specialProgressionCount * 30);
                     player.AddBuff(BuffID.ChaosState, 600);
                     mplayer.specialTimer = 600;
                     if(mplayer.special2 > 3)
@@ -532,28 +535,28 @@ namespace RPG
                     {
                         mplayer.special = 0;
                     }
-                    player.AddBuff(BuffType("ActiveCooldown"), 180);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 180);
                 }
                 else if (mplayer.monk)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 600);
                     float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.7) / 6;
                     float dam = 18 * scalar * player.meleeDamage;
                     Vector2 toMouse = Main.MouseWorld - player.Center;
                     toMouse.Normalize();
                     toMouse *= 4;
                     //toMouse += player.velocity;
-                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, toMouse.X, toMouse.Y, ProjectileType("MonkPalm"), (int)dam, 0, player.whoAmI);
+                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, toMouse.X, toMouse.Y, ProjectileType<Projectiles.MonkPalm>(), (int)dam, 0, player.whoAmI);
                 }
                 else if (mplayer.warpKnight)
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 900 - mplayer.specialProgressionCount*30);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 900 - mplayer.specialProgressionCount*30);
                     float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 6;
                     float dam = 18 * scalar * player.meleeDamage;
                     Vector2 toMouse = Main.MouseWorld - player.Center;
                     toMouse.Normalize();
                     toMouse *= 11;
-                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, toMouse.X, toMouse.Y, ProjectileType("WarpBolt"), (int)dam, 0, player.whoAmI);
+                    int p = Projectile.NewProjectile(player.Center.X, player.Center.Y, toMouse.X, toMouse.Y, ProjectileType<Projectiles.WarpBolt>(), (int)dam, 0, player.whoAmI);
                 }
                 else if (mplayer.heritor)
                 {
@@ -566,7 +569,7 @@ namespace RPG
                         }
                         if(mplayer.special3 == 0)
                         {
-                            player.AddBuff(BuffType("ActiveCooldown"), 60);
+                            player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 60);
                             //begin cycle, exclude special2
                             mplayer.special3 = 540;
                         }
@@ -575,13 +578,13 @@ namespace RPG
                             mplayer.special = mplayer.special4;
                             mplayer.special3 = -1;
                             mplayer.specialTimer = 1800;
-                            player.AddBuff(BuffType("ActiveCooldown"), 1800);
+                            player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 1800);
                         }
                     }
                 }
                 else
                 {
-                    player.AddBuff(BuffType("ActiveCooldown"), 3600);
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 3600);
                     player.statLife += 30 + mplayer.specialProgressionCount * 5;
                     player.HealEffect(30 + mplayer.specialProgressionCount * 5);
                 }

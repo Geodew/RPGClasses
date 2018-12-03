@@ -26,7 +26,7 @@ namespace RPG.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MPlayer modPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+            MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
             if (player.dead || !player.active)
             {
                 projectile.Kill();
@@ -99,7 +99,7 @@ namespace RPG.Projectiles
                         //shoot
                         if(projectile.ai[1] % 10 == 0 && projectile.ai[1] < -20)
                         {
-                            MPlayer mPlayer = (MPlayer)player.GetModPlayer(mod, "MPlayer");
+                            MPlayer mPlayer = player.GetModPlayer<MPlayer>(mod);
                             float scalar = 1f + (float)Math.Pow(mPlayer.specialProgressionCount, 1.75) / 6;
                             int damage = (int)(11 * scalar);
                             //play sound
