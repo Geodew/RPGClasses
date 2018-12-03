@@ -25,7 +25,7 @@ namespace RPG.Projectiles
             //warp player, give invincibility and damage buff
             Player player = Main.player[projectile.owner];
             player.Teleport(projectile.position, 1);
-            NetMessage.SendData(65, -1, -1, null, 0, (float)player.whoAmI, projectile.position.X, projectile.position.Y, 1, 0, 0);
+            NetMessage.SendData(MessageID.Teleport, -1, -1, null, 0, (float)player.whoAmI, projectile.position.X, projectile.position.Y, 1, 0, 0);
             player.immune = true;
             player.immuneTime = 60;
             player.AddBuff(mod.BuffType<Buffs.WarpStrength>(), 180);
@@ -37,7 +37,7 @@ namespace RPG.Projectiles
             {
                 Player player = Main.player[projectile.owner];
                 player.Teleport(projectile.position, 1);
-                NetMessage.SendData(65, -1, -1, null, 0, (float)player.whoAmI, projectile.position.X, projectile.position.Y, 1, 0, 0);
+                NetMessage.SendData(MessageID.Teleport, -1, -1, null, 0, (float)player.whoAmI, projectile.position.X, projectile.position.Y, 1, 0, 0);
                 int mana = (int)((player.statManaMax2 - player.statMana) / 3);
                 player.statMana += mana;
                 player.ManaEffect(mana);

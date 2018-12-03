@@ -36,7 +36,7 @@ namespace RPG.Buffs
                         target.StrikeNPC((int)damage, 12, dir, crit);
                         if (Main.netMode == NetmodeID.Server)
                         {
-                            NetMessage.SendData(28, -1, -1, null, target.whoAmI, damage, 12, dir, crit ? 1 : 0);
+                            NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, target.whoAmI, damage, 12, dir, crit ? 1 : 0);
                         }
                         target.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 60);
                     }
@@ -52,7 +52,7 @@ namespace RPG.Buffs
                 npc.StrikeNPC(npc.life+npc.defense/2+1, 0, 0);
                 if (Main.netMode != NetmodeID.SinglePlayer)
                 {
-                    NetMessage.SendData(28, -1, -1, null, npc.whoAmI, npc.life + npc.defense / 2 + 1);
+                    NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, npc.life + npc.defense / 2 + 1);
                 }
             }
         }

@@ -664,7 +664,7 @@ namespace RPG
                 {
                     int direction = (Main.npc[i].position.X > p.X ? 1:-1);
                     int d = (int)Main.npc[i].StrikeNPC(damage, knockback, direction, false, false, false);
-                    NetMessage.SendData(28, -1, -1, null, i, (float)damage, knockback, (float)direction, 0, 0, 0);
+                    NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, i, (float)damage, knockback, (float)direction, 0, 0, 0);
                 }
             }
         }

@@ -46,7 +46,7 @@ namespace RPG.Projectiles
                                 npcD.StrikeNPC(9999, 0f, 0, false, false);
                                 if (Main.netMode == NetmodeID.Server)
                                 {
-                                    NetMessage.SendData(28, -1, -1, null, npcD.whoAmI, 9999f, 0f, 0f);
+                                    NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npcD.whoAmI, 9999f, 0f, 0f);
                                 }
                             }
                         }

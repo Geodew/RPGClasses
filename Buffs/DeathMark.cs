@@ -1,5 +1,6 @@
 ﻿
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 
@@ -23,7 +24,7 @@ namespace RPG.Buffs
                 int damage = 5 + (int)(info.deathMarkDamage * (.35 + .01*mplayer.specialProgressionCount));
                 damage += npc.defense / 2;
                 npc.StrikeNPC(damage, 0, 0, true);
-                NetMessage.SendData(28, -1, -1, null, npc.whoAmI, (float)damage, 0, 0, 1, 0, 0);
+                NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, (float)damage, 0, 0, 1, 0, 0);
                 info.deathMarkDamage = 0;
                 info.deathMarkOwner = -1;
             }
