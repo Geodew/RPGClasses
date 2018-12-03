@@ -406,7 +406,7 @@ namespace RPG
                             player.HealEffect(healAmount);
                             player.statLife = mplayer.special;
 
-                            PacketMessages.HealPlayerNetMsg.SerializeAndSend(
+                            HealPlayerNetMsg.SerializeAndSend(
                                 this,
                                 player.whoAmI,
                                 healAmount);
