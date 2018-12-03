@@ -17,6 +17,7 @@ namespace RPG.Projectiles
             projectile.penetrate = -1;
             projectile.maxPenetrate = -1;
         }
+
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
@@ -27,7 +28,7 @@ namespace RPG.Projectiles
             projectile.position = player.Center + vect;
             projectile.position.Y -= 16;
             projectile.position.X -= 8;
-            for (int i=0; i<1000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Projectile proj = Main.projectile[i];
                 if (proj.hostile && proj.getRect().Intersects(projectile.getRect()))
@@ -36,6 +37,7 @@ namespace RPG.Projectiles
                 }
             }
         }
+
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             Vector2 rot = target.Center - Main.player[projectile.owner].Center;

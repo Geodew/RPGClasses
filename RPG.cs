@@ -303,19 +303,18 @@ namespace RPG
                 }
                 else if (mplayer.wanderer)
                 {
-                    if(mplayer.special3 <= 0)
+                    if (mplayer.special3 > 0)
                     {
-                        return;
-                    }
-                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 60);
-                    int p = Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType<Projectiles.WandererPortal>(), 0, 0, Main.myPlayer);
-                    mplayer.special++;
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        if (Main.projectile[i].type == ProjectileType<Projectiles.WandererCharge>() && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].ai[1] == mplayer.special3)
+                        player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 60);
+                        int p = Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, ProjectileType<Projectiles.WandererPortal>(), 0, 0, Main.myPlayer);
+                        mplayer.special++;
+                        for (int i = 0; i < 1000; i++)
                         {
-                            Main.projectile[i].Kill();
-                            break;
+                            if (Main.projectile[i].type == ProjectileType<Projectiles.WandererCharge>() && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].ai[1] == mplayer.special3)
+                            {
+                                Main.projectile[i].Kill();
+                                break;
+                            }
                         }
                     }
                 }
@@ -438,7 +437,8 @@ namespace RPG
                 }
                 else if (mplayer.celestial)
                 {
-                    if(mplayer.special == 0)
+                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 180);
+                    if (mplayer.special == 0)
                     {
                         mplayer.special = 1;
                     }
@@ -446,7 +446,6 @@ namespace RPG
                     {
                         mplayer.special = 0;
                     }
-                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 180);
                 }
                 else if (mplayer.voidwalker)
                 {
@@ -479,51 +478,51 @@ namespace RPG
                     {
                         int num260 = (int)(vector15.X / 16f);
                         int num261 = (int)(vector15.Y / 16f);
-                        if ((Main.tile[num260, num261].wall != 87 || (double)num261 <= Main.worldSurface || NPC.downedPlantBoss) && !Collision.SolidCollision(vector15, player.width, player.height))
+                        if (((Main.tile[num260, num261].wall != WallID.LihzahrdBrickUnsafe) || ((double)num261 <= Main.worldSurface) || NPC.downedPlantBoss) &&  // Don't allow teleport inside the Jungle Temple unless the player should have a Temple Key by now (Plantera defeated)
+                            !Collision.SolidCollision(vector15, player.width, player.height))
                         {
                             player.Teleport(vector15, 1, 0);
-                            NetMessage.SendData(65, -1, -1, null, 0, (float)player.whoAmI, vector15.X, vector15.Y, 1, 0, 0);
+                            NetMessage.SendData(MessageID.Teleport, -1, -1, null, 0, (float)player.whoAmI, vector15.X, vector15.Y, 1, 0, 0);
+
+                            player.statMana -= cost;
+                            player.manaRegenDelay = 90;
+                            mplayer.special2++;
+                            player.AddBuff(BuffType<Buffs.ActiveCooldown>(), Math.Max(480 - mplayer.specialProgressionCount * 30, 60));
+                            player.AddBuff(BuffID.ChaosState, 600);
+                            mplayer.specialTimer = 600;
+                            if (mplayer.special2 > 3)
+                            {
+                                int selfDam = Math.Min(player.statLifeMax / 20 * (mplayer.special2 - 3), player.statLifeMax / 5);
+                                player.statLife -= selfDam;
+                                CombatText.NewText(player.getRect(), Color.OrangeRed, selfDam.ToString());
+                                player.lifeRegenTime = 0;
+                                player.lifeRegenCount = 0;
+                                if (player.statLife <= 0)
+                                {
+                                    player.KillMe(new Terraria.DataStructures.PlayerDeathReason(), 1.0, 0);
+                                }
+                            }
+
+                            // Deal area damage
+                            float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 6;
+                            float damage = 14 * scalar * Math.Max(player.magicDamage, player.meleeDamage) * Math.Max(1 + player.magicCrit / 100f, 1 + player.meleeCrit / 100f) * (1 + mplayer.special2 / 3f);
+                            DamageArea(vector15, 144, (int)damage, 3);
+
+                            // Visuals
+                            for (int i = 0; i < 30; i++)
+                            {
+                                int d = Dust.NewDust(vector15, 1, 1, 27);
+                                Main.dust[d].velocity *= 4.0f;
+
+                                SpawnDustNetMsg.SerializeAndSendPosition(
+                                    this,
+                                    vector15,
+                                    27,
+                                    true,
+                                    false,
+                                    4.0f);
+                            }
                         }
-                        else { return; }
-                    }
-                    else { return; }
-                    player.statMana -= cost;
-                    player.manaRegenDelay = 90;
-                    mplayer.special2++;
-                    player.AddBuff(BuffType<Buffs.ActiveCooldown>(), 480 - mplayer.specialProgressionCount * 30);
-                    player.AddBuff(BuffID.ChaosState, 600);
-                    mplayer.specialTimer = 600;
-                    if(mplayer.special2 > 3)
-                    {
-                        int selfDam = Math.Min(player.statLifeMax / 20 * (mplayer.special2 - 3), player.statLifeMax/5);
-                        player.statLife -= selfDam;
-                        CombatText.NewText(player.getRect(), Color.OrangeRed, selfDam + "");
-                        player.lifeRegenTime = 0;
-                        player.lifeRegenCount = 0;
-                        if(player.statLife <= 0)
-                        {
-                            player.KillMe(new Terraria.DataStructures.PlayerDeathReason(), 1.0, 0);
-                        }
-                    }
-
-                    // Deal area damage
-                    float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 6;
-                    float damage = 14 * scalar * Math.Max(player.magicDamage, player.meleeDamage) * Math.Max(1+player.magicCrit/100f, 1+player.meleeCrit/100f) * (1 + mplayer.special2 / 3f);
-                    DamageArea(vector15, 144, (int)damage, 3);
-
-                    // Visuals
-                    for(int i = 0; i < 30; i++)
-                    {
-                        int d = Dust.NewDust(vector15, 1, 1, 27);
-                        Main.dust[d].velocity *= 4.0f;
-
-                        SpawnDustNetMsg.SerializeAndSendPosition(
-                            this,
-                            vector15,
-                            27,
-                            true,
-                            false,
-                            4.0f);
                     }
                 }
                 else if (mplayer.moth)
