@@ -4846,7 +4846,7 @@ namespace RPG
         {
         }
 
-        public static void DamageArea(Vector2 p, int width, int damage, int knockback)//hostile npcs, no crit, no immunity
+        public static void DamageArea(Vector2 p, int width, int damage, int knockback)  // Hostile npcs, no crit, no immunity
         {
             damage = (int)(damage * Main.rand.Next(90, 111) / 100.0);
             Microsoft.Xna.Framework.Rectangle hurtbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);
@@ -4862,7 +4862,7 @@ namespace RPG
             }
         }
 
-        public void HealArea(Vector2 p, int width, int healAmount)  // Hostile npcs, no crit, no immunity // bad comment?
+        public /*static*/ void HealArea(Vector2 p, int width, int healAmount)  // Players only, not dead
         {
             Microsoft.Xna.Framework.Rectangle healbox = new Microsoft.Xna.Framework.Rectangle((int)p.X - width, (int)p.Y - width, width * 2, width * 2);
             for (int i = 0; i < 256; i++)
