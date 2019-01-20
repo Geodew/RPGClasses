@@ -348,6 +348,11 @@ namespace RPG
             #endregion
         }
 
+        public bool IsActiveAbilityKeyHeld()
+        {
+            return (dragoon || sage);
+        }
+
         public override void PreUpdateBuffs()
         {
             #region knight
@@ -3949,26 +3954,34 @@ namespace RPG
                         false,
                         1.0f);
                 }
+
                 if(specialTimer > 1)
                 {
                     special = Math.Min(120, special + 1);
                 }
-                if(specialTimer == 1)
+                else if(specialTimer == 1)
                 {
                     //cast spell
                     int charge = special;
                     Vector2 vel = Main.MouseWorld - player.Center;
                     vel.Normalize();
                     vel *= 12;
-                    float scalar = 1f + (float)Math.Pow(specialProgressionCount, 1.75) / 7f * (float)(1+special/180.0);
-                    float damage = 40 * scalar;
-                    for(int i=0; i<=charge; i += 60)
+                    float scalar = 1.0f + (float)Math.Pow(specialProgressionCount, 1.75) / 7.0f * (1.0f + charge / 180.0f);
+                    float damage = 40.0f * scalar;
+                    for(int i = 0; i <= charge; i += 60)
                     {
                         int p = Projectile.NewProjectile(player.position.X, player.position.Y, vel.X + Main.rand.Next(-20, 21) / 8, vel.Y + Main.rand.Next(-20, 21) / 8, ProjectileID.FallingStar, (int)damage, 3, player.whoAmI);
                         Main.projectile[p].localAI[1] = 1;
                     }
                     player.statManaMax -= 20;
                     player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 600);
+
+                    PlayerActiveAbilityStartNetMsg.SerializeAndSend(
+                        mod,
+                        player.whoAmI,
+                        true,
+                        special - 2);  // Subtract what's been accumulated since releasing the button, since the receiving client will add it back again
+
                     special = 0;
                 }
             }
@@ -3976,7 +3989,7 @@ namespace RPG
             {
                 specialTimer = 4;
                 player.statMana--;
-                player.manaRegenDelay = 60;
+                player.manaRegenDelay = Math.Max(player.manaRegenDelay, 60);  // If another mod has set it higher or something, don't override that
                 if(player.statMana <= 0)
                 {
                     player.statMana = 0;
@@ -4002,19 +4015,40 @@ namespace RPG
                         false,
                         1.0f);
                 }
+
                 if (specialTimer > 1)
                 {
                     special = Math.Min(120, special + 1);
                 }
-                if (specialTimer == 1)
+                else if (specialTimer == 1)
                 {
-                    if(player.velocity.Y == 0)
+                    // Prevent player from jumping when in air
+                    if (player.velocity.Y == 0.0f)
                     {
+                        // Jump activates
                         int charge = 60 + special;
-                        float scalar = 1 + specialProgressionCount / 7;
-                        float vel = charge * scalar * (1+player.jumpSpeedBoost) / 10;
+                        float scalar = 1.0f;// + specialProgressionCount / 7.0f;  // Was too high to the point where it's unusable (e.g. hitting the roof of the world in space from the surface with just a tap), jump speed boost increase from Leveling Up is enough by itself
+                        float vel = charge * scalar * (1.0f + player.jumpSpeedBoost) / 10.0f;
                         player.velocity.Y = -vel;
                         player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 180);
+
+                        PlayerActiveAbilityStartNetMsg.SerializeAndSend(
+                            mod,
+                            player.whoAmI,
+                            true,
+                            special - 2);  // Subtract what's been accumulated since releasing the button, since the receiving client will add it back again
+                    }
+                    else
+                    {
+                        // Released button while in mid-air. Enable fast fall, but don't save the charge-up (could be exploited for instant max height jump on next press)
+                        special = 1;  // 1 frame of charge
+
+                        // Must only send info: Update 'special', but don't launch player into the air if vertical velocities are de-synched slightly
+                        PlayerActiveAbilityInfoNetMsg.SerializeAndSend(
+                            mod,
+                            player.whoAmI,
+                            true,
+                            special);
                     }
                 }
             }
@@ -4050,11 +4084,11 @@ namespace RPG
                 player.forceWerewolf = true;
                 player.AddBuff(BuffID.Werewolf, 2);
             }
-            else if (werewolf && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>())>=0)
+            else if (werewolf && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>()) >= 0)
             {
                 player.meleeDamage -= .1f;
             }
-            else if(fortress && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>()) >= 0 && player.FindBuffIndex(BuffID.Stoned) == -1 && special>0)
+            else if(fortress && player.FindBuffIndex(mod.BuffType<Buffs.ActiveCooldown>()) >= 0 && player.FindBuffIndex(BuffID.Stoned) == -1 && special > 0)
             {
                 special2 = special;
                 specialTimer = 360;
@@ -4126,9 +4160,9 @@ namespace RPG
                     Main.dust[d].velocity *= 8;
                     Main.dust[d].velocity += player.velocity;
 
-                    SandstormVisualsNetMsg.SerializeAndSend(
-                        mod,
-                        player.whoAmI);
+                    //SandstormVisualsNetMsg.SerializeAndSend(
+                    //    mod,
+                    //    player.whoAmI);
                 }
 
                 // Sandstorm damage
@@ -4531,6 +4565,8 @@ namespace RPG
                 specialTimer = 0;
                 special = 0;
                 player.AddBuff(mod.BuffType<Buffs.ActiveCooldown>(), 900);
+
+                // Shouldn't need NetUpdate here, only player X needs to know about player X's cooldown
             }
 
             base.Hurt(pvp, quiet, damage, hitDirection, crit);

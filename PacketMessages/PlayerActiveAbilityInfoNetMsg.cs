@@ -5,9 +5,9 @@ using Terraria.ModLoader;
 
 namespace RPG.PacketMessages
 {
-    class PlayerActiveAbilityStartNetMsg
+    class PlayerActiveAbilityInfoNetMsg
     {
-        private const PacketMessageTypeEnum mPacketMessageType = PacketMessageTypeEnum.PLAYER_ACTIVE_ABILITY_START;
+        private const PacketMessageTypeEnum mPacketMessageType = PacketMessageTypeEnum.PLAYER_ACTIVE_ABILITY_INFO;
 
         private int mPlayerId;
         private bool mOverrideSpecialVariable;
@@ -25,10 +25,7 @@ namespace RPG.PacketMessages
                 Player player = Main.player[mPlayerId];
                 MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
 
-                typedMod.ActiveAbilityStart(
-                    mplayer,
-                    mOverrideSpecialVariable,
-                    mPlayerModSpecialVariable);
+                mplayer.special = mPlayerModSpecialVariable;
             }
             else
             {

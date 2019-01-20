@@ -96,6 +96,8 @@
     <Compile Include="PacketMessages\HealPlayerNetMsg.cs" />
     <Compile Include="PacketMessages\LevelUpPlayerNetMsg.cs" />
     <Compile Include="PacketMessages\PacketMessageTypeEnum.cs" />
+    <Compile Include="PacketMessages\PlayerActiveAbilityInfoNetMsg.cs" />
+    <Compile Include="PacketMessages\PlayerActiveAbilityStartNetMsg.cs" />
     <Compile Include="PacketMessages\PlayerClassLevelInfoNetMsg.cs" />
     <Compile Include="PacketMessages\SandstormVisualsNetMsg.cs" />
     <Compile Include="PacketMessages\SpawnDustNetMsg.cs" />

@@ -11,7 +11,8 @@ namespace RPG.PacketMessages
         HEAL_NPC,
         LEVEL_UP_PLAYER,
         PLAYER_CLASS_LEVEL_INFO,
-        PLAYER_ABILITY_INFO,
-        SANDSTORM_VISUALS
+        PLAYER_ACTIVE_ABILITY_INFO,
+        SANDSTORM_VISUALS,
+        PLAYER_ACTIVE_ABILITY_START
     }
 }
