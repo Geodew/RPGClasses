@@ -706,6 +706,22 @@ namespace RPG
                         this);
                     break;
 
+                case PacketMessageTypeEnum.PLAYER_ACTIVE_ABILITY_INFO:
+                    PlayerActiveAbilityInfoNetMsg playerActiveAbilityInfoNetMsg = new PlayerActiveAbilityInfoNetMsg();
+                    playerActiveAbilityInfoNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
+                case PacketMessageTypeEnum.PLAYER_ACTIVE_ABILITY_START:
+                    PlayerActiveAbilityStartNetMsg playerActiveAbilityStartNetMsg = new PlayerActiveAbilityStartNetMsg();
+                    playerActiveAbilityStartNetMsg.HandlePacket(
+                        reader,
+                        whoAmI,
+                        this);
+                    break;
+
                 default:
                     //zzz log unhandled message
                     break;
