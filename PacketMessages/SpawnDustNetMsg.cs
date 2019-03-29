@@ -30,7 +30,7 @@ namespace RPG.PacketMessages
 
 
         private void Process(
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             int dustIdIndex;
@@ -76,17 +76,17 @@ namespace RPG.PacketMessages
 
         public void HandlePacket(
                 BinaryReader reader,
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             Deserialize(
                 reader,
-                whoAmI);
+                senderPlayerId);
             ServerBroadcast(
-                whoAmI,
+                senderPlayerId,
                 mod);
             Process(
-                whoAmI,
+                senderPlayerId,
                 mod);
         }
 
@@ -187,7 +187,7 @@ namespace RPG.PacketMessages
 
         private void Deserialize(
                 BinaryReader reader,
-                int whoAmI)
+                int senderPlayerId)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace RPG.PacketMessages
         }
 
         private void ServerBroadcast(
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             if (Main.netMode == NetmodeID.Server)

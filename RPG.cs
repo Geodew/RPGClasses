@@ -650,7 +650,8 @@ namespace RPG
             }
         }
 
-        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        // tModLoader calls senderPlayerId `whoAmI` instead, but this name is more accurate.
+        public override void HandlePacket(BinaryReader reader, int senderPlayerId)
         {
             PacketMessageTypeEnum messageType = (PacketMessageTypeEnum)reader.ReadInt32();
             switch(messageType)
@@ -661,7 +662,7 @@ namespace RPG
                         SpawnDustNetMsg spawnDustNetMsg = new SpawnDustNetMsg();
                         spawnDustNetMsg.HandlePacket(
                             reader,
-                            whoAmI,
+                            senderPlayerId,
                             this);
                     }
                     break;
@@ -670,15 +671,16 @@ namespace RPG
                     VelocityChangeNpcNetMsg velocityChangeNpcNetMsg = new VelocityChangeNpcNetMsg();
                     velocityChangeNpcNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
                 case PacketMessageTypeEnum.SANDSTORM_VISUALS:
+                    // For Legacy support to support play with out-of-date players, but shouldn't be sent anymore
                     SandstormVisualsNetMsg sandstormVisualsNetMsg = new SandstormVisualsNetMsg();
                     sandstormVisualsNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
@@ -686,7 +688,7 @@ namespace RPG
                     HealPlayerNetMsg healPlayerNetMsg = new HealPlayerNetMsg();
                     healPlayerNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
@@ -694,7 +696,7 @@ namespace RPG
                     LevelUpPlayerNetMsg levelUpPlayerNetMsg = new LevelUpPlayerNetMsg();
                     levelUpPlayerNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
@@ -702,7 +704,7 @@ namespace RPG
                     PlayerClassLevelInfoNetMsg playerClassLevelInfoNetMsg = new PlayerClassLevelInfoNetMsg();
                     playerClassLevelInfoNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
@@ -710,7 +712,7 @@ namespace RPG
                     PlayerActiveAbilityInfoNetMsg playerActiveAbilityInfoNetMsg = new PlayerActiveAbilityInfoNetMsg();
                     playerActiveAbilityInfoNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 
@@ -718,7 +720,7 @@ namespace RPG
                     PlayerActiveAbilityStartNetMsg playerActiveAbilityStartNetMsg = new PlayerActiveAbilityStartNetMsg();
                     playerActiveAbilityStartNetMsg.HandlePacket(
                         reader,
-                        whoAmI,
+                        senderPlayerId,
                         this);
                     break;
 

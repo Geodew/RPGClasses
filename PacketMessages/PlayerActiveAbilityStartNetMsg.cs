@@ -15,11 +15,11 @@ namespace RPG.PacketMessages
 
 
         private void Process(
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             // Don't allow a bug or malicious modder to activate your own Active Ability
-            if (mPlayerId != whoAmI)
+            if (mPlayerId != Main.myPlayer)
             {
                 RPG typedMod = mod as RPG;
                 Player player = Main.player[mPlayerId];
@@ -38,17 +38,17 @@ namespace RPG.PacketMessages
 
         public void HandlePacket(
                 BinaryReader reader,
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             Deserialize(
                 reader,
-                whoAmI);
+                senderPlayerId);
             ServerBroadcast(
-                whoAmI,
+                senderPlayerId,
                 mod);
             Process(
-                whoAmI,
+                senderPlayerId,
                 mod);
         }
 
@@ -74,7 +74,7 @@ namespace RPG.PacketMessages
 
         private void Deserialize(
                 BinaryReader reader,
-                int whoAmI)
+                int senderPlayerId)
         {
             mPlayerId = reader.ReadInt32();
             mOverrideSpecialVariable = reader.ReadBoolean();
@@ -82,7 +82,7 @@ namespace RPG.PacketMessages
         }
 
         private void ServerBroadcast(
-                int whoAmI,
+                int senderPlayerId,
                 Mod mod)
         {
             if (Main.netMode == NetmodeID.Server)
