@@ -34,7 +34,7 @@ namespace RPG.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Player player = Main.player[projectile.owner];
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             if (mplayer.moth)
             {
                 GNPC info = target.GetGlobalNPC<GNPC>();

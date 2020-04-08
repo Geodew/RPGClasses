@@ -23,7 +23,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player p)
         {
-            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = p.GetModPlayer<MPlayer>();
             Main.NewText("Level " + (mplayer.specialProgressionCount + 1));  // Some classes will exceed 15
             string killedBosses = "";
             if (mplayer.killedEye) { killedBosses += "Eye of Cthulu, "; }

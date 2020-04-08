@@ -23,7 +23,7 @@ namespace RPG.PacketMessages
             {
                 RPG typedMod = mod as RPG;
                 Player player = Main.player[mPlayerId];
-                MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+                MPlayer mplayer = player.GetModPlayer<MPlayer>();
 
                 mplayer.special = mPlayerModSpecialVariable;
             }

@@ -44,7 +44,7 @@ namespace RPG
                 if (Main.player[i].active)
                 {
                     Player p = Main.player[i];
-                    MPlayer player = p.GetModPlayer<MPlayer>(mod);
+                    MPlayer player = p.GetModPlayer<MPlayer>();
                     bool leveledUp = false;
                     BossGroupEnum msgType = BossGroupEnum.INVALID;
 
@@ -202,7 +202,7 @@ namespace RPG
         {
             if (npc.type == NPCID.BloodCrawler || npc.type == NPCID.BloodCrawlerWall || npc.type == NPCID.FaceMonster || npc.type == NPCID.Crimera || npc.type == NPCID.BigCrimera || npc.type == NPCID.LittleCrimera)
             {
-                MPlayer player = target.GetModPlayer<MPlayer>(mod);
+                MPlayer player = target.GetModPlayer<MPlayer>();
                 if(player.bloodKnight && player.killedWormOrBrain)
                 {
                     return false;
@@ -210,7 +210,7 @@ namespace RPG
             }
             if(npc.type==NPCID.EaterofSouls || npc.type == NPCID.LittleEater || npc.type == NPCID.BigEater || npc.type == NPCID.DevourerBody || npc.type == NPCID.DevourerHead || npc.type == NPCID.DevourerTail)
             {
-                MPlayer player = target.GetModPlayer<MPlayer>(mod);
+                MPlayer player = target.GetModPlayer<MPlayer>();
                 if (player.taintedElf && player.killedWormOrBrain)
                 {
                     return false;

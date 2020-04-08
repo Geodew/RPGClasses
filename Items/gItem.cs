@@ -7,7 +7,7 @@ namespace RPG.Items
     {
         public override bool CanEquipAccessory(Item item, Player player, int slot)
         {
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             if((mplayer.harpy || mplayer.angel || mplayer.demon) && item.wingSlot > 0)
             {
                 return false;
@@ -16,7 +16,7 @@ namespace RPG.Items
         }
         public override bool CanUseItem(Item item, Player player)
         {
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             if (mplayer.ranger && mplayer.specialTimer > 0)
             {
                 mplayer.specialTimer = 0;

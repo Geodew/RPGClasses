@@ -25,7 +25,7 @@ namespace RPG.Projectiles
         public override void AI()
         { 
             Player p = Main.player[projectile.owner];
-            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = p.GetModPlayer<MPlayer>();
             if (p.dead || mplayer.special3 == 0)
             {
                 projectile.Kill();

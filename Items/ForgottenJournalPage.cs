@@ -21,7 +21,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player p)
         {
-            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = p.GetModPlayer<MPlayer>();
             if (NPC.downedBoss1 && !mplayer.killedEye)
             {
                 mplayer.killedEye = true;

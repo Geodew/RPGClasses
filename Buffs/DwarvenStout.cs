@@ -15,7 +15,7 @@ namespace RPG.Buffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             float scalar = 1 + mplayer.specialProgressionCount / 7f;
             if(player.position.Y > Main.rockLayer * 16 && player.position.Y < (Main.maxTilesY - 200) * 16)
             {

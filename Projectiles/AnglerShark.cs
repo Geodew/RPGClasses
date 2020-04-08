@@ -31,7 +31,7 @@ namespace RPG.Projectiles
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             Player player = Main.player[projectile.owner];
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             float scalar = 1f + (float)Math.Pow(mplayer.specialProgressionCount, 1.6) / 8;
             float dam = 21 * scalar * (1 + (float)player.FishingLevel() / 100.0f);
             if (projectile.ai[1] == 1)

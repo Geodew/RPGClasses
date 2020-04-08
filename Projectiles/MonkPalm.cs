@@ -46,7 +46,7 @@ namespace RPG.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Player p = Main.player[projectile.owner];
-            MPlayer mplayer = p.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = p.GetModPlayer<MPlayer>();
             projectile.friendly = false;
             Vector2 vel = projectile.velocity;
             vel.Normalize();

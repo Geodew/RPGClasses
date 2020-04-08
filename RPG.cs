@@ -31,7 +31,7 @@ namespace RPG
         public override void HotKeyPressed(string name)
         {
             Player player = Main.player[Main.myPlayer];
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(this);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
 
             if (name.Equals(ActiveAbilityHotkeyName) && (player.FindBuffIndex(BuffType<Buffs.ActiveCooldown>()) == -1))
             {

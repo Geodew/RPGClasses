@@ -66,7 +66,7 @@ namespace RPG.Projectiles
                 Main.dust[d].velocity *= 7;
             }
             Player player = Main.player[projectile.owner];
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             mplayer.specialTimer = 600;
             mplayer.special2 = (int)projectile.localAI[0];
         }

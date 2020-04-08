@@ -20,7 +20,7 @@ namespace RPG.Buffs
         {
             GNPC info = npc.GetGlobalNPC<GNPC>();
             Player player = Main.player[info.monkPalmOwner];
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             for(int i=0; i<200; i++)
             {
                 NPC target = Main.npc[i];

@@ -20,7 +20,7 @@ namespace RPG.Items
 
         public override bool UseItem(Player player)
         {
-            MPlayer mplayer = player.GetModPlayer<MPlayer>(mod);
+            MPlayer mplayer = player.GetModPlayer<MPlayer>();
             if (mplayer.hasClass)
             {
                 return true;

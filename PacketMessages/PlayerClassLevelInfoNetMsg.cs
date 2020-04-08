@@ -84,7 +84,7 @@ namespace RPG.PacketMessages
             if (mPlayerId != Main.myPlayer)
             {
                 Player player = Main.player[mPlayerId];
-                MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
+                MPlayer modPlayer = player.GetModPlayer<MPlayer>();
 
                 modPlayer.hasClass = mHasClass;
 
@@ -322,7 +322,7 @@ namespace RPG.PacketMessages
             if (Main.netMode == NetmodeID.Server)
             {
                 Player player = Main.player[mPlayerId];
-                MPlayer modPlayer = player.GetModPlayer<MPlayer>(mod);
+                MPlayer modPlayer = player.GetModPlayer<MPlayer>();
 
                 SerializeAndSend(
                     mod,
